@@ -288,8 +288,8 @@ export default function App() {
       setAudioUrl("#preset-audio");
       setActiveTab("voice");
     } else if (preset.type === "visual") {
-      // Provide a small beautiful solid colored dot representing a messy space for the model to mock
-      setSelectedImage("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==");
+      // Use the premium unsplash preview image if available, else a base64 dot
+      setSelectedImage(preset.imageUrl || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==");
       setImageMime("image/png");
       setActiveTab("visual");
     }
@@ -762,17 +762,19 @@ export default function App() {
                     <div className="w-full md:w-56 h-40 rounded-2xl bg-sage/5 border border-dashed border-sage/30 flex items-center justify-center overflow-hidden relative">
                       {selectedImage ? (
                         <div className="w-full h-full flex flex-col items-center justify-center relative bg-black/5 p-2">
-                          {selectedImage.startsWith("data:") ? (
-                            <div className="text-center">
-                              <div className="w-8 h-8 rounded-full bg-red-500 mx-auto animate-ping mb-2"></div>
-                              <span className="text-[10px] uppercase tracking-widest text-slate-text/60">Sample Data Loaded</span>
+                          <img 
+                            src={selectedImage} 
+                            alt="Kekacauan yang akan diurai" 
+                            className="object-cover w-full h-full rounded-xl"
+                            referrerPolicy="no-referrer"
+                          />
+                          {selectedImage.startsWith("data:") && selectedImage.length < 500 && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-sage/15 backdrop-blur-sm p-3 text-center">
+                              <div className="w-8 h-8 rounded-full bg-sage/20 flex items-center justify-center mb-1 animate-pulse">
+                                <Sparkles className="w-4 h-4 text-sage" />
+                              </div>
+                              <span className="text-[10px] uppercase tracking-widest text-[#4A5568] font-bold">Preset Aktif</span>
                             </div>
-                          ) : (
-                            <img 
-                              src={selectedImage} 
-                              alt="Kekacauan yang akan diurai" 
-                              className="object-cover w-full h-full rounded-xl"
-                            />
                           )}
                         </div>
                       ) : (
