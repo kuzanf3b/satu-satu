@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Lato", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-cream: #F9F5F0;
+  --color-slate-text: #4A5568;
+  --color-sage: #81A172;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-slate-text);
+  font-family: var(--font-sans);
+}
+
+/* Custom smooth transitions and utility styles */
+.gradient-bg {
+  background: radial-gradient(circle at top right, rgba(129, 161, 114, 0.08) 0%, transparent 60%);
+}
+
+.pulsate-subtle {
+  animation: pulsate 3s ease-in-out infinite;
+}
+
+@keyframes pulsate {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
