@@ -538,43 +538,8 @@ export default function App() {
       <div className="absolute top-0 right-0 w-80 h-80 bg-sage/5 rounded-full filter blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-20 left-0 w-96 h-96 bg-sage/5 rounded-full filter blur-3xl pointer-events-none"></div>
 
-      {/* Pinned Session Exit Bar if loading or inside active micro-missions */}
-      {(loading || currentScreen === "anchor" || currentScreen === "isolation") && (
-        <div className="fixed top-4 left-4 right-4 z-[60] flex items-center justify-between px-5 py-3 bg-cream/95 backdrop-blur-lg rounded-2xl border border-sage/20 shadow-xl max-w-4xl mx-auto">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-sage flex items-center justify-center text-cream animate-pulse">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-sage font-mono font-bold">
-                {loading ? "AI Mengurai Kekacauan..." : "Sesi Dekompresi Aktif"}
-              </p>
-              <h4 className="text-xs font-serif font-bold text-slate-text line-clamp-1">
-                {loading ? "Sedang menyusun langkah mikro..." : (mission?.task_title || "Langkah Aktif")}
-              </h4>
-            </div>
-          </div>
-          
-          <button
-            onClick={() => {
-              playCozySynthBell(220, 0.4);
-              setLoading(false);
-              setCurrentScreen("hub");
-              if (window.speechSynthesis) {
-                window.speechSynthesis.cancel();
-              }
-              setTtsPlaying(false);
-            }}
-            className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 transition-all text-xs font-semibold rounded-xl flex items-center space-x-1.5 border border-red-200 cursor-pointer shadow-sm animate-bounce"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Keluar ke Menu Utama</span>
-          </button>
-        </div>
-      )}
-
       {/* Main Bar */}
-      {!loading && currentScreen !== "anchor" && currentScreen !== "isolation" && (
+      {currentScreen !== "anchor" && currentScreen !== "isolation" && (
         <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentScreen("welcome")}>
             <div className="w-10 h-10 rounded-full bg-sage flex items-center justify-center text-cream shadow-sm hover:rotate-12 transition-transform duration-300">
@@ -925,6 +890,15 @@ export default function App() {
                     <RefreshCw className="w-6 h-6 text-sage animate-spin mb-2" />
                     <span className="text-xs font-serif italic text-slate-text/80 font-bold">{loadingStep}</span>
                     <span className="text-[10px] text-slate-text/50 mt-1 uppercase tracking-wider font-mono">Dekompresi Sedang Berjalan via Gemini AI</span>
+                    <button
+                      onClick={() => {
+                        playCozySynthBell(164.81, 0.4);
+                        setLoading(false);
+                      }}
+                      className="mt-3 text-[10px] font-mono font-bold text-red-500/80 hover:text-red-600 uppercase tracking-wider transition-colors cursor-pointer"
+                    >
+                      [ Batalkan Proses ]
+                    </button>
                   </div>
                 ) : (
                   <button
@@ -1014,9 +988,23 @@ export default function App() {
                       setCurrentScreen("isolation");
                       generateCoachSpeech(`Mari masuk ke langkah mikro pertama.`);
                     }}
-                    className="mt-4 text-xs font-medium text-slate-text/40 hover:text-slate-text transition-colors"
+                    className="mt-4 text-xs font-semibold text-slate-text/60 hover:text-slate-text transition-colors"
                   >
                     Lewati langkah jangkar langsung ke misi mikro
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      playCozySynthBell(164.81, 0.4);
+                      setCurrentScreen("hub");
+                      if (window.speechSynthesis) {
+                        window.speechSynthesis.cancel();
+                      }
+                      setTtsPlaying(false);
+                    }}
+                    className="mt-3 text-xs font-medium text-red-500/80 hover:text-red-600 transition-colors flex items-center space-x-1"
+                  >
+                    <span>&larr; Batalkan &amp; Kembali ke Menu Utama</span>
                   </button>
                 </div>
               </motion.div>
@@ -1393,7 +1381,7 @@ export default function App() {
       </main>
 
       {/* Footer Branding Area */}
-      {!loading && currentScreen !== "anchor" && currentScreen !== "isolation" && (
+      {currentScreen !== "anchor" && currentScreen !== "isolation" && (
         <footer className="border-t border-sage/15 py-8 px-6 text-center text-[10px] uppercase tracking-wider text-slate-text/50 font-mono mt-auto relative z-10 bg-cream/70 backdrop-blur-md">
           <p>&copy; {new Date().getFullYear()} UraiLangkah - Finding Clarity in Chaos via Multimodal AI</p>
           <p className="mt-1 font-sans font-light normal-case text-slate-text/40">Didesain khusus untuk penderita ADHD, Autisme, Prokrastinasi Kronis, dan gangguan fungsi eksekutif.</p>
