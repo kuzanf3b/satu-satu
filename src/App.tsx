@@ -33,7 +33,7 @@ function playCozySynthBell(freq: number, duration: number, type: OscillatorType 
 }
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<"welcome" | "hub" | "isolation" | "insights">("welcome");
+  const [currentScreen, setCurrentScreen] = useState<"welcome" | "hub" | "anchor" | "isolation" | "insights">("welcome");
   const [activeTab, setActiveTab] = useState<"visual" | "voice" | "text">("visual");
   
   // State for task inputs
@@ -357,6 +357,7 @@ export default function App() {
           { instruction: "Tarik napas dalam-dalam selama 5 hitungan.", estimated_time: "1" },
           { instruction: "Tata 1 barang terdekat ke tempatnya.", estimated_time: "3" }
         ],
+        anchor_step: data.anchor_step || "Jangan rapikan dulu. Cukup dekatkan cangkir kopi / gelas terdekat tepat 5 sentimeter ke arahmu.",
         affirmation: data.affirmation || "Kamu melakukan hal hebat dengan mengawalinya perlahan.",
         createdAt: Date.now(),
         completedSteps: new Array(data.steps ? data.steps.length : 2).fill(false),
@@ -364,10 +365,10 @@ export default function App() {
       };
 
       setMission(newMission);
-      setCurrentScreen("isolation");
+      setCurrentScreen("anchor");
       
-      // Auto speech intro from ADHD Coach!
-      generateCoachSpeech(`Saya menemukan ${newMission.steps.length} langkah mikro untukmu. Mari baca langkah pertama: ${newMission.steps[0].instruction}`);
+      // Auto speech intro from ADHD Coach about the 10-second anchor!
+      generateCoachSpeech(`Saya menemukan sebuah langkah jangkar 10 detik pemicu energimu. ${newMission.anchor_step}`);
       
       // Play a beautiful success tone
       playCozySynthBell(523.25, 0.4);
@@ -537,35 +538,72 @@ export default function App() {
       <div className="absolute top-0 right-0 w-80 h-80 bg-sage/5 rounded-full filter blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-20 left-0 w-96 h-96 bg-sage/5 rounded-full filter blur-3xl pointer-events-none"></div>
 
-      {/* Main Bar */}
-      <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentScreen("welcome")}>
-          <div className="w-10 h-10 rounded-full bg-sage flex items-center justify-center text-cream shadow-sm hover:rotate-12 transition-transform duration-300">
-            <Sparkles className="w-5 h-5" />
+      {/* Pinned Session Exit Bar if loading or inside active micro-missions */}
+      {(loading || currentScreen === "anchor" || currentScreen === "isolation") && (
+        <div className="fixed top-4 left-4 right-4 z-[60] flex items-center justify-between px-5 py-3 bg-cream/95 backdrop-blur-lg rounded-2xl border border-sage/20 shadow-xl max-w-4xl mx-auto">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded-full bg-sage flex items-center justify-center text-cream animate-pulse">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-sage font-mono font-bold">
+                {loading ? "AI Mengurai Kekacauan..." : "Sesi Dekompresi Aktif"}
+              </p>
+              <h4 className="text-xs font-serif font-bold text-slate-text line-clamp-1">
+                {loading ? "Sedang menyusun langkah mikro..." : (mission?.task_title || "Langkah Aktif")}
+              </h4>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl font-serif font-bold tracking-tight text-slate-text">UraiLangkah</h1>
-            <p className="text-[10px] uppercase tracking-widest text-slate-text/60">ADHD Cognitive Armor</p>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {/* Daily Streak Indicator */}
-          <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-sage/10 text-slate-text border border-sage/20 text-xs font-mono font-medium" title="Kemenangan Mikro Hari Ini">
-            <Heart className="w-3.5 h-3.5 text-sage fill-sage animate-pulse" />
-            <span>Streak:</span>
-            <span className="text-slate-text font-bold">{streakCount} pts</span>
-          </div>
-
-          <button 
-            onClick={() => setCurrentScreen("insights")}
-            className="p-1.5 rounded-full hover:bg-sage/10 text-slate-text/70 hover:text-slate-text transition-colors"
-            title="Wawasan Regulasi Emosi"
+          
+          <button
+            onClick={() => {
+              playCozySynthBell(220, 0.4);
+              setLoading(false);
+              setCurrentScreen("hub");
+              if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+              }
+              setTtsPlaying(false);
+            }}
+            className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 transition-all text-xs font-semibold rounded-xl flex items-center space-x-1.5 border border-red-200 cursor-pointer shadow-sm animate-bounce"
           >
-            <Compass className="w-5 h-5" />
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Keluar ke Menu Utama</span>
           </button>
         </div>
-      </header>
+      )}
+
+      {/* Main Bar */}
+      {!loading && currentScreen !== "anchor" && currentScreen !== "isolation" && (
+        <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentScreen("welcome")}>
+            <div className="w-10 h-10 rounded-full bg-sage flex items-center justify-center text-cream shadow-sm hover:rotate-12 transition-transform duration-300">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-serif font-bold tracking-tight text-slate-text">UraiLangkah</h1>
+              <p className="text-[10px] uppercase tracking-widest text-slate-text/60">ADHD Cognitive Armor</p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            {/* Daily Streak Indicator */}
+            <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-sage/10 text-slate-text border border-sage/20 text-xs font-mono font-medium" title="Kemenangan Mikro Hari Ini">
+              <Heart className="w-3.5 h-3.5 text-sage fill-sage animate-pulse" />
+              <span>Streak:</span>
+              <span className="text-slate-text font-bold">{streakCount} pts</span>
+            </div>
+
+            <button 
+              onClick={() => setCurrentScreen("insights")}
+              className="p-1.5 rounded-full hover:bg-sage/10 text-slate-text/70 hover:text-slate-text transition-colors"
+              title="Wawasan Regulasi Emosi"
+            >
+              <Compass className="w-5 h-5" />
+            </button>
+          </div>
+        </header>
+      )}
 
       {/* Navigation Main Block router */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 md:p-8 flex flex-col justify-center relative z-10">
@@ -768,6 +806,15 @@ export default function App() {
                             className="object-cover w-full h-full rounded-xl"
                             referrerPolicy="no-referrer"
                           />
+                          {/* Phase 1: Scanner Layar using Framer Motion absolute overlay */}
+                          {loading && (
+                            <motion.div 
+                              className="absolute left-0 right-0 h-[3px] bg-emerald-400 shadow-[0_0_12px_#34d399] z-20"
+                              initial={{ top: "0%" }}
+                              animate={{ top: "100%" }}
+                              transition={{ repeat: Infinity, repeatType: "reverse", duration: 1.5, ease: "easeInOut" }}
+                            />
+                          )}
                           {selectedImage.startsWith("data:") && selectedImage.length < 500 && (
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-sage/15 backdrop-blur-sm p-3 text-center">
                               <div className="w-8 h-8 rounded-full bg-sage/20 flex items-center justify-center mb-1 animate-pulse">
@@ -890,6 +937,89 @@ export default function App() {
                 )}
 
               </div>
+            </motion.div>
+          )}
+
+          {/* Screen: AI Micro-Habit Anchor (The Action Trigger) - ZERO CHOICE DIMMED FOCUS STATE */}
+          {currentScreen === "anchor" && mission && (
+            <motion.div
+              key="anchor-screen"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0a0f0d]/95 backdrop-blur-md"
+            >
+              <div className="absolute inset-0 bg-radial-gradient opacity-20 pointer-events-none"></div>
+              
+              <motion.div
+                initial={{ scale: 0.9, y: 30 }}
+                animate={{ scale: 1, y: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 180 }}
+                className="bg-cream p-8 md:p-12 rounded-[40px] border border-sage/30 max-w-lg w-full shadow-2xl text-center relative overflow-hidden"
+              >
+                <div className="absolute -top-12 -left-12 w-32 h-32 bg-sage/10 rounded-full filter blur-xl"></div>
+                <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-sage/10 rounded-full filter blur-xl"></div>
+
+                <div className="flex flex-col items-center">
+                  <span className="px-3 py-1 bg-sage/10 text-sage hover:bg-sage/15 transition-colors text-[10px] uppercase font-mono font-black tracking-widest border border-sage/15 rounded-full mb-6">
+                    ⚡ Fase 2: Aktivasi Energi Otak
+                  </span>
+
+                  <div className="w-16 h-16 rounded-full bg-sage/5 flex items-center justify-center mb-6 ring-4 ring-sage/10 relative">
+                    <div className="absolute inset-2 rounded-full bg-sage/10 animate-ping opacity-60"></div>
+                    <Sparkles className="w-6 h-6 text-sage relative z-10" />
+                  </div>
+
+                  <h3 className="text-xl font-serif font-black tracking-tight text-slate-text mb-3">
+                    The 10-Second Anchor Card
+                  </h3>
+
+                  <p className="text-xs font-sans font-medium text-slate-text/70 mb-6 max-w-sm leading-relaxed">
+                    Jangan pikirkan seluruh tumpukan tugas Anda. Cukup menangkan 10 detik pertama dengan melakukan gerakan konyol dan super mudah berikut ini:
+                  </p>
+
+                  <div className="bg-sage/5 border border-sage/15 p-6 rounded-3xl mb-8 w-full shadow-inner">
+                    <h4 className="text-lg md:text-xl font-serif font-bold text-slate-text leading-relaxed">
+                      &ldquo;{mission.anchor_step}&rdquo;
+                    </h4>
+                  </div>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => {
+                      // Satisfying synthesis-harmonic dopamine cascade!
+                      playCozySynthBell(261.63, 0.4); 
+                      setTimeout(() => playCozySynthBell(329.63, 0.4), 100); 
+                      setTimeout(() => playCozySynthBell(392.00, 0.4), 200); 
+                      setTimeout(() => playCozySynthBell(523.25, 0.6), 320); 
+
+                      const transPhrase = "Langkah jangkar berhasil dilalui! Hebat sekali. Mari kita mulai Misi Mikro sesungguhnya.";
+                      generateCoachSpeech(transPhrase);
+
+                      setStreakCount(prev => prev + 1);
+                      localStorage.setItem("urai_streak", String(streakCount + 1));
+                      
+                      setCurrentScreen("isolation");
+                    }}
+                    className="w-full py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-sm tracking-wider transition-all shadow-lg shadow-sage/25 flex items-center justify-center space-x-3 cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                    <span>Selesai! Beri Saya Dopamin ⚡</span>
+                  </motion.button>
+
+                  <button
+                    onClick={() => {
+                      playCozySynthBell(330, 0.3);
+                      setCurrentScreen("isolation");
+                      generateCoachSpeech(`Mari masuk ke langkah mikro pertama.`);
+                    }}
+                    className="mt-4 text-xs font-medium text-slate-text/40 hover:text-slate-text transition-colors"
+                  >
+                    Lewati langkah jangkar langsung ke misi mikro
+                  </button>
+                </div>
+              </motion.div>
             </motion.div>
           )}
 
@@ -1263,10 +1393,12 @@ export default function App() {
       </main>
 
       {/* Footer Branding Area */}
-      <footer className="border-t border-sage/15 py-8 px-6 text-center text-[10px] uppercase tracking-wider text-slate-text/50 font-mono mt-auto relative z-10 bg-cream/70 backdrop-blur-md">
-        <p>&copy; {new Date().getFullYear()} UraiLangkah - Finding Clarity in Chaos via Multimodal AI</p>
-        <p className="mt-1 font-sans font-light normal-case text-slate-text/40">Didesain khusus untuk penderita ADHD, Autisme, Prokrastinasi Kronis, dan gangguan fungsi eksekutif.</p>
-      </footer>
+      {!loading && currentScreen !== "anchor" && currentScreen !== "isolation" && (
+        <footer className="border-t border-sage/15 py-8 px-6 text-center text-[10px] uppercase tracking-wider text-slate-text/50 font-mono mt-auto relative z-10 bg-cream/70 backdrop-blur-md">
+          <p>&copy; {new Date().getFullYear()} UraiLangkah - Finding Clarity in Chaos via Multimodal AI</p>
+          <p className="mt-1 font-sans font-light normal-case text-slate-text/40">Didesain khusus untuk penderita ADHD, Autisme, Prokrastinasi Kronis, dan gangguan fungsi eksekutif.</p>
+        </footer>
+      )}
 
     </div>
   );

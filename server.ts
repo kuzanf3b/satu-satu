@@ -50,6 +50,7 @@ Aturan penting dalam menjalankan tugas:
 3. VISUAL ANALYSIS: Jika gambar diberikan, identifikasi objek fisik tertentu secara spatial (misal: "buku biru di sebelah kiri", "cangkir di atas meja") untuk mempermudah eksekusi nyata di dunia fisik.
 4. ISOLATION: Sajikan instruksi yang sangat jelas, terfokus, bertahap, dan tidak memicu Choice Paralysis (stres karena terlalu banyak pilihan).
 5. BRAIN DUMP: Jika pengguna memberikan audio venting / curhatan stres acak, saring dan ambil 3 tugas paling prioritas dengan pengaruh tertinggi (ignore the rest of the noise).
+6. MICRO-HABIT ANCHOR: Anda wajib memberikan satu tugas jangkar ("anchor_step") berdurasi tidak lebih dari 10 detik yang sangat mudah, konyol, atau sangat sederhana untuk dilewati (e.g. geser cangkir 5cm, ambil 1 kertas terdekat, jepit lipatan baju terdekat). Ini akan memicu momentum energi aktivasi otak pengguna.
 
 Anda harus selalu merespons dalam format JSON sesuai schema yang diminta.
 `;
@@ -60,6 +61,10 @@ const taskResponseSchema = {
     task_title: {
       type: Type.STRING,
       description: "Judul mikro yang menenangkan dan menyenangkan (dalam Bahasa Indonesia)"
+    },
+    anchor_step: {
+      type: Type.STRING,
+      description: "Misi Utama 10 Detik: Instruksi jangkar fisik ultra-ringan penyalur energi aktivasi kognitif (e.g. taruh botol ke plastik, jentikkan jari, geser pulpen)."
     },
     steps: {
       type: Type.ARRAY,
@@ -84,7 +89,7 @@ const taskResponseSchema = {
       description: "Kalimat afirmasi hangat, bersahabat, dan menenangkan dalam Bahasa Indonesia."
     }
   },
-  required: ["task_title", "steps", "affirmation"]
+  required: ["task_title", "anchor_step", "steps", "affirmation"]
 };
 
 // API Endpoints: Task Decomposition from Text Venting
@@ -99,6 +104,7 @@ app.post("/api/decompress-text", async (req, res) => {
       // Elegant dummy response for fallback
       return res.json({
         task_title: "Merapikan Pikiran yang Sedang Riuh",
+        anchor_step: "Jangan rapikan apa pun dulu. Ambil satu lembar kertas kosong terdekat, remas-remas perlahan selama 5 detik, lalu taruh di ujung meja kerja Anda.",
         steps: [
           { instruction: "Ambil napas dalam-dalam selama 4 hitungan, keluarkan perlahan.", estimated_time: "1" },
           { instruction: "Tuliskan 1 hal yang paling mendesak di kertas kosong.", estimated_time: "2" },
@@ -146,6 +152,7 @@ app.post("/api/decompress-visual", async (req, res) => {
     if (!process.env.GEMINI_API_KEY) {
       return res.json({
         task_title: "Merapikan Ruang Fisik Terdekat",
+        anchor_step: "Lupakan draf dan pakaian menumpuk itu sejenak. Cukup ambil cangkir atau gelas kosong paling kanan di dekatmu, dan geser tepat 5cm ke arahmu.",
         steps: [
           { instruction: "Pindahkan gelas atau wadah cairan kosong yang terlihat di mejamu.", estimated_time: "2" },
           { instruction: "Kumpulkan kertas-kertas acak menjadi satu tumpukan rapi.", estimated_time: "3" },
@@ -200,6 +207,7 @@ app.post("/api/decompress-audio", async (req, res) => {
     if (!process.env.GEMINI_API_KEY) {
       return res.json({
         task_title: "Mengurai Curhatan Suara Kamu",
+        anchor_step: "Keluhkan semuanya keluar. Sebelum mulai melihat tugas, tautkan ibu jari dan jari telapak tangan kiri Anda selama 5 detik untuk grounding.",
         steps: [
           { instruction: "Duduklah bersandar sejenak dan biarkan napasmu kembali teratur.", estimated_time: "2" },
           { instruction: "Tuliskan saja 3 hal yang sempat kamu sebutkan tadi dalam bentuk draf kasar.", estimated_time: "3" },

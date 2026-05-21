@@ -7,6 +7,7 @@ export interface TaskMission {
   id: string;
   task_title: string;
   steps: MicroStep[];
+  anchor_step: string; // 10-second ultra-low friction activation trigger
   affirmation: string;
   createdAt: number;
   completedSteps: boolean[]; // tracks which steps the user completed
@@ -16,6 +17,7 @@ export interface TaskMission {
 export interface DecompressResponse {
   task_title: string;
   steps: MicroStep[];
+  anchor_step: string;
   affirmation: string;
 }
 
