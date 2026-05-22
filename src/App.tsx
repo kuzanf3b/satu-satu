@@ -95,24 +95,24 @@ export default function App() {
   const insights = [
     {
       title: "The Cognitive Crisis",
-      subtitle: "Memahami jurang pemisah antara tahu apa yang harus dilakukan dan memiliki fungsi eksekutif untuk memulainya.",
-      concept: "Executive Dysfunction",
-      desc: "Kemacetan kognitif di mana manajer otak gagal menyusun prioritas atau mengurutkan tugas, menyebabkan kelumpuhan total meskipun motivasi kita sangat tinggi.",
-      bullet: "Bukan kemalasan, ini adalah respon protektif otak terhadap beban berlebih."
+      subtitle: "Kenapa kita menunda hal yang kita tahu harus dilakukan.",
+      concept: "Disfungsi Eksekutif",
+      desc: "Otak mengalami kemacetan saat menyusun prioritas. Ini bukan kemalasan, melainkan beban kognitif berlebih.",
+      bullet: "Respon alami otak terhadap informasi yang terlalu menumpuk."
     },
     {
       title: "The Problem: Task Paralysis",
-      subtitle: "Kenapa daftar tugas yang panjang justru membuat kita merasa membeku.",
-      concept: "ADHD Paralysis & Overwhelm",
-      desc: "Kewalahan mental yang dipicu oleh pemikiran all-or-nothing (semua atau tidak sama sekali). Sasaran yang besar dan abstrak memicu respons fight-or-flight, sehingga procrastinasi menjadi tameng emosional.",
-      bullet: "UraiLangkah menyaring kebisingan dan melindungimu dari Wall of Awful."
+      subtitle: "Daftar tugas panjang membuat kita membeku.",
+      concept: "Kecemasan Tugas",
+      desc: "Sasaran abstrak memicu rasa takut gagal. Menunda tugas menjadi tameng perlindungan emosi sementara.",
+      bullet: "UraiLangkah menyaring kebisingan pikiran agar menjadi tugas nyata."
     },
     {
       title: "Aesthetic Philosophy: The Zen Shield",
-      subtitle: "Prinsip antarmuka kami untuk menjaga kedamaian mentalmu.",
-      concept: "Proteksi Dopamin & Regulasi Emosi",
-      desc: "Dengan menampilkan hanya satu kartu tugas sekali waktu, kami memutus siklus kecemasan. Tidak ada hukuman atas tenggat waktu yang terlewat, yang ada hanya restart hangat dan penguatan positif berulang kali.",
-      bullet: "Desain tanpa scroll yang mematikan paralysis pilihan."
+      subtitle: "Menjaga kedamaian mental saat bekerja.",
+      concept: "Fokus Terisolasi",
+      desc: "Menampilkan hanya satu instruksi kecil sekali waktu akan meredakan stres akibat pilihan berlebih.",
+      bullet: "Tanpa scroll panjang, fokus pada langkah aktif saat ini."
     }
   ];
 
@@ -120,30 +120,30 @@ export default function App() {
   const presets: PresetItem[] = [
     {
       id: "preset_desk",
-      title: "Meja Kerja Kacau (Kopi & Kertas)",
+      title: "Meja Kerja Berantakan",
       type: "visual",
-      description: "Analisis cangkir kopi, kertas acak, kabel melilit, dan pulpen berantakan di meja belajarmu.",
+      description: "Urai gelas kopi, kertas berserakan, dan kabel melilit di meja.",
       imageUrl: presetDeskImg
     },
     {
       id: "preset_room",
-      title: "Lemari Pakaian yang Menggunung",
+      title: "Pakaian Menumpuk",
       type: "visual",
-      description: "Pakaian bersih tercampur pakaian kotor di atas kasur atau tumpukan lemari.",
+      description: "Urai tumpukan baju kotor atau cucian meluap di kamar.",
       imageUrl: presetRoomImg
     },
     {
       id: "preset_voice_frustrated",
-      title: "Brain Dump Suara (Stres Tugas)",
+      title: "Curahan Suara (Email & Cucian)",
       type: "voice",
-      description: "Pikiran riuh tentang 10 email masuk, cucian menumpuk, dan cemas mau memasak malam ini.",
+      description: "Suara acak saat pusing memikirkan cucian dan email masuk.",
       sampleText: "Duh gila ya email masuk banyak banget ada kali 15 belum dibales, mana cucian baju numpuk, trus ntar malem harus masak tapi bahan belom beli, kayaknya mau nangis aja pusing gatau mau mulai dari mana..."
     },
     {
       id: "preset_text_chaos",
-      title: "Brain Dump Teks (Overwhelmed)",
+      title: "Venting Teks (Skripsi & Dapur)",
       type: "text",
-      description: "Venting tanpa henti tentang skripsi, tagihan air, kucing lapar, dan tumpukan piring kotor.",
+      description: "Ketik acak tentang skripsi lambat, piring kotor, kucing lapar.",
       sampleText: "Harus beresin skripsi bab 3 tapi piring kotor di dapur numpuk bau banget, kucing meong meong lapar sedangkan pakan abis di luar lagi hujan deras cemas banget tolong bantu urai!"
     }
   ];
@@ -680,11 +680,11 @@ export default function App() {
               </div>
 
               <h2 className="text-4xl md:text-5xl font-serif font-black tracking-tight mb-4 text-slate-text leading-tight">
-                Tenang. Mari Kita Urai Bersama.
+                Mari Kita Urai Bersama.
               </h2>
               
-              <p className="text-md md:text-lg text-slate-text/80 mb-8 max-w-md leading-relaxed font-sans font-light">
-                Membantu pikiran yang riuh, cemas, atau kacau untuk bangkit menjadi aksi nyata tanpa Choice Paralysis.
+              <p className="text-sm md:text-md text-slate-text/80 mb-8 max-w-sm leading-relaxed font-sans font-light">
+                Ubah kekacauan pikiran atau tumpukan area yang berantakan menjadi tugas mikro instan tanpa rasa cemas.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
@@ -693,7 +693,7 @@ export default function App() {
                     setCurrentScreen("hub");
                     playCozySynthBell(440, 0.4);
                   }}
-                  className="px-8 py-4 bg-sage hover:bg-sage/90 text-cream rounded-full font-medium transition-all shadow-md shadow-sage/10 hover:shadow-lg flex items-center justify-center space-x-2"
+                  className="px-8 py-4 bg-sage hover:bg-sage/90 text-cream rounded-full font-medium transition-all shadow-md shadow-sage/10 hover:shadow-lg flex items-center justify-center space-x-2 text-sm"
                 >
                   <span>Mulai Mengurai</span>
                   <ArrowRight className="w-4 h-4" />
@@ -704,17 +704,17 @@ export default function App() {
                     setCurrentScreen("insights");
                     playCozySynthBell(330, 0.4);
                   }}
-                  className="px-6 py-4.5 bg-sage/10 hover:bg-sage/15 text-slate-text rounded-full text-sm font-medium transition-colors flex items-center justify-center space-x-2 border border-sage/10"
+                  className="px-6 py-4.5 bg-sage/10 hover:bg-sage/15 text-slate-text rounded-full text-xs font-medium transition-colors flex items-center justify-center space-x-2 border border-sage/10"
                 >
                   <Compass className="w-4 h-4" />
-                  <span>Pelajari Regulasi ADHD</span>
+                  <span>Disfungsi Eksekutif ADHD</span>
                 </button>
               </div>
 
               {/* Serene Insight Footer */}
               <div className="mt-16 pt-8 border-t border-sage/10 w-full text-slate-text/50 text-xs">
                 <blockquote className="italic">
-                  &ldquo;Anda tidak malas atau tidak mahir. Anda hanya sedang menghadapi kemacetan fungsi eksekutif. Mari mengurai satu langkah ringan di sini.&rdquo;
+                  &ldquo;Kamu tidak malas. Kamu hanya sedang menghadapi kemacetan kognitif. Mari melangkah perlahan di sini.&rdquo;
                 </blockquote>
               </div>
             </motion.div>
@@ -736,24 +736,24 @@ export default function App() {
                 className="self-start mb-6 flex items-center space-x-2 text-xs font-medium text-slate-text/60 hover:text-slate-text transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Gerbang Utama</span>
+                <span>Pintu Masuk</span>
               </button>
 
-              <div className="mb-8">
+              <div className="mb-6">
                 <span className="text-xs uppercase tracking-widest text-[#81A172] font-semibold">UraiLangkah Engine</span>
-                <h2 className="text-3xl font-serif font-black tracking-tight mt-1 text-slate-text">
-                  Bagaimana Pikiranmu Sedang Kewalahan?
+                <h2 className="text-2xl md:text-3xl font-serif font-black tracking-tight mt-1 text-slate-text">
+                  Ada Apa Hari Ini?
                 </h2>
-                <p className="text-sm text-slate-text/70 mt-1.5 font-light">
-                  Pilih cara analisis masukan yang paling nyaman bagi tingkat energi kognitifmu saat ini.
+                <p className="text-xs text-slate-text/70 mt-1 font-light">
+                  Pilihlah media input yang paling nyaman bagi tingkat energimu saat ini.
                 </p>
               </div>
 
               {/* Preset Selector Rail */}
               <div className="mb-6 p-4 bg-sage/5 rounded-2xl border border-sage/10">
                 <span className="text-xs uppercase tracking-wider text-sage/80 font-bold block mb-3 flex items-center justify-between">
-                  <span>✨ Sand Box Penguji (Uji Multi-Modal Instan!)</span>
-                  <span className="text-[10px] text-slate-text/50 font-normal font-sans">Klik contoh di bawah ini untuk melihat keajaiban dekompresi</span>
+                  <span>✨ Sandbox Contoh Uji Multi-Modal</span>
+                  <span className="text-[10px] text-slate-text/50 font-normal font-sans">Klik acak untuk langsung memuat contoh input</span>
                 </span>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   {presets.map((preset) => (
@@ -779,56 +779,56 @@ export default function App() {
               <div className="flex border-b border-sage/10 mb-6 gap-2">
                 <button
                   onClick={() => { setActiveTab("visual"); playCozySynthBell(330, 0.2); }}
-                  className={`pb-3 px-4 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                  className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
                     activeTab === "visual"
                       ? "border-sage text-sage"
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
                   }`}
                 >
                   <Camera className="w-4 h-4" />
-                  <span>Kamera / Foto (Visual)</span>
+                  <span>Gunakan Foto (Visual)</span>
                 </button>
                 
                 <button
                   onClick={() => { setActiveTab("voice"); playCozySynthBell(392, 0.2); }}
-                  className={`pb-3 px-4 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                  className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
                     activeTab === "voice"
                       ? "border-sage text-sage"
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
                   }`}
                 >
                   <Mic className="w-4 h-4" />
-                  <span>Curahan Suara (Audio)</span>
+                  <span>Curah Suara (Audio)</span>
                 </button>
 
                 <button
                   onClick={() => { setActiveTab("text"); playCozySynthBell(440, 0.2); }}
-                  className={`pb-3 px-4 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                  className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
                     activeTab === "text"
                       ? "border-sage text-sage"
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
                   }`}
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Venting Teks (Brain Dump)</span>
+                  <span>Ketik Teks (Brain Dump)</span>
                 </button>
               </div>
 
               {/* Tab Contents Frame */}
-              <div className="bg-cream p-6 rounded-3xl border border-sage/15 shadow-sm min-h-[220px] flex flex-col justify-between">
+              <div className="bg-cream p-6 rounded-3xl border border-sage/15 shadow-sm min-h-[200px] flex flex-col justify-between">
                 
                 {activeTab === "visual" && (
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-1">
                       <h3 className="font-serif font-medium text-lg mb-2">Visual Decompressor</h3>
                       <p className="text-xs text-slate-text/70 mb-4 leading-relaxed">
-                        Otak ADHD sering lumpuh saat melihat tumpukan pakaian yang acak atau meja kerja penuh piring. Gunakan foto area tersebut, AI kami akan mendeteksi benda fisik spasial terpenting untuk dipindahkan terlebih dahulu.
+                        Foto area kerjamu yang berantakan. AI akan menemukan 1 benda fisik terpenting untuk dipindahkan pertama kali agar memutus kelumpuhan kognitifmu.
                       </p>
                       
                       <div className="flex items-center space-x-3">
                         <label className="cursor-pointer bg-sage/15 hover:bg-sage/25 text-slate-text px-4 py-2.5 rounded-full text-xs font-semibold flex items-center space-x-2 transition-colors border border-sage/10">
                           <Upload className="w-3.5 h-3.5" />
-                          <span>Pilih Foto Kamar/Meja Anda</span>
+                          <span>Pilih Foto</span>
                           <input 
                             type="file" 
                             accept="image/*" 
@@ -841,7 +841,7 @@ export default function App() {
                             onClick={() => { setSelectedImage(null); playCozySynthBell(220, 0.2); }}
                             className="text-xs text-red-500 hover:underline"
                           >
-                            Hapus Foto
+                            Hapus
                           </button>
                         )}
                       </div>
@@ -877,7 +877,7 @@ export default function App() {
                       ) : (
                         <div className="text-center p-4">
                           <Camera className="w-8 h-8 text-slate-text/30 mx-auto mb-2" />
-                          <span className="text-xs text-slate-text/40">Belum ada foto terpilih</span>
+                          <span className="text-xs text-slate-text/40">Belum ada foto</span>
                         </div>
                       )}
                     </div>
@@ -889,7 +889,7 @@ export default function App() {
                     <div className="flex-1">
                       <h3 className="font-serif font-medium text-lg mb-2">Audio Venting Decompressor</h3>
                       <p className="text-xs text-slate-text/70 mb-4 leading-relaxed">
-                        Keluarkan keluh kesahmu tanpa peduli ejaan atau tata bahasa. Sampaikan semua kekacauan hari ini kepada Coach UraiLangkah lewat tombol suara terenkripsi di samping.
+                        Keluarkan beban pikiranmu secara acak lewat rekaman audio. AI akan memilah 3 prioritas utama dan mengabaikan kekhawatiran berlebih lainnya.
                       </p>
 
                       <div className="flex items-center space-x-4">
@@ -997,7 +997,7 @@ export default function App() {
                       </button>
                     </div>
                     <textarea
-                      placeholder="Tuliskan semua kecemasanmu secara acak di sini... Misal: saya harus cuci piring sekalian bayar listrik, tapi skripsi saya telat 1 minggu, kamar mandi juga berantakan"
+                      placeholder="Ketik apa saja yang membebani pikiranmu... Contoh: harus cuci pakaian tapi skripsi telat dan kamar mandi sangat berantakan"
                       value={textVent}
                       onChange={(e) => setTextVent(e.target.value)}
                       className="w-full h-32 bg-cream text-sm rounded-2xl p-4 border border-sage/20 focus:border-sage focus:outline-none resize-none leading-relaxed transition-all"
@@ -1019,7 +1019,7 @@ export default function App() {
                     <div className="absolute inset-x-0 bottom-0 h-1 bg-sage/30 animate-pulse"></div>
                     <RefreshCw className="w-6 h-6 text-sage animate-spin mb-2" />
                     <span className="text-xs font-serif italic text-slate-text/80 font-bold">{loadingStep}</span>
-                    <span className="text-[10px] text-slate-text/50 mt-1 uppercase tracking-wider font-mono">Dekompresi Sedang Berjalan via Gemini AI</span>
+                    <span className="text-[10px] text-slate-text/50 mt-1 uppercase tracking-wider font-mono">Diproses via Gemini AI</span>
                     <button
                       onClick={() => {
                         playCozySynthBell(164.81, 0.4);
@@ -1027,16 +1027,16 @@ export default function App() {
                       }}
                       className="mt-3 text-[10px] font-mono font-bold text-red-500/80 hover:text-red-600 uppercase tracking-wider transition-colors cursor-pointer"
                     >
-                      [ Batalkan Proses ]
+                      [ Batalkan ]
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={handleDecompress}
-                    className="mt-6 w-full py-4.5 bg-sage hover:bg-sage/90 text-cream rounded-2xl font-serif font-bold text-md tracking-wider transition-all shadow-md shadow-sage/10 flex items-center justify-center space-x-2"
+                    className="mt-6 w-full py-4 bg-sage hover:bg-sage/90 text-cream rounded-2xl font-serif font-bold text-md tracking-wider transition-all shadow-md shadow-sage/10 flex items-center justify-center space-x-2 text-sm"
                   >
                     <Sparkles className="w-4 h-4" />
-                    <span>Urai Kekacauan Ini</span>
+                    <span>Mulai Urai Masalah</span>
                   </button>
                 )}
 
@@ -1066,7 +1066,7 @@ export default function App() {
 
                 <div className="flex flex-col items-center">
                   <span className="px-3 py-1 bg-sage/10 text-sage hover:bg-sage/15 transition-colors text-[10px] uppercase font-mono font-black tracking-widest border border-sage/15 rounded-full mb-6">
-                    ⚡ Fase 2: Aktivasi Energi Otak
+                    ⚡ Langkah Pertama
                   </span>
 
                   <div className="w-16 h-16 rounded-full bg-sage/5 flex items-center justify-center mb-6 ring-4 ring-sage/10 relative">
@@ -1075,11 +1075,11 @@ export default function App() {
                   </div>
 
                   <h3 className="text-xl font-serif font-black tracking-tight text-slate-text mb-3">
-                    The 10-Second Anchor Card
+                    Langkah Jangkar (10 Detik)
                   </h3>
 
                   <p className="text-xs font-sans font-medium text-slate-text/70 mb-6 max-w-sm leading-relaxed">
-                    Jangan pikirkan seluruh tumpukan tugas Anda. Cukup menangkan 10 detik pertama dengan melakukan gerakan konyol dan super mudah berikut ini:
+                    Jangan pikirkan hasil akhir. Cukup menangkan momentum pertamamu dengan aksi super ringan di bawah ini:
                   </p>
 
                   <div className="bg-sage/5 border border-sage/15 p-6 rounded-3xl mb-8 w-full shadow-inner">
@@ -1106,7 +1106,7 @@ export default function App() {
                       
                       setCurrentScreen("isolation");
                     }}
-                    className="w-full py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-sm tracking-wider transition-all shadow-lg shadow-sage/25 flex items-center justify-center space-x-3 cursor-pointer"
+                    className="w-full py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-xs tracking-wider transition-all shadow-lg shadow-sage/25 flex items-center justify-center space-x-3 cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                     <span>Selesai! Beri Saya Dopamin ⚡</span>
@@ -1120,7 +1120,7 @@ export default function App() {
                     }}
                     className="mt-4 text-xs font-semibold text-slate-text/60 hover:text-slate-text transition-colors"
                   >
-                    Lewati langkah jangkar langsung ke misi mikro
+                    Lewati jangkar & langsung ke Misi Mikro
                   </button>
 
                   <button
@@ -1131,7 +1131,7 @@ export default function App() {
                     }}
                     className="mt-3 text-xs font-medium text-red-500/80 hover:text-red-600 transition-colors flex items-center space-x-1"
                   >
-                    <span>&larr; Batalkan &amp; Kembali ke Menu Utama</span>
+                    <span>&larr; Batalkan</span>
                   </button>
                 </div>
               </motion.div>
@@ -1322,10 +1322,10 @@ export default function App() {
                   
                   {/* The Companion Circle Container */}
                   <div className="bg-cream/40 p-6 rounded-3xl border border-sage/10 flex flex-col items-center">
-                    <span className="text-[10px] uppercase tracking-widest text-[#81A172] font-mono font-bold mb-4">Body Doubling Companion</span>
+                    <span className="text-[10px] uppercase tracking-widest text-[#81A172] font-mono font-bold mb-4">Teman Fokus (AI Companion)</span>
                     
                     {/* Pulsing Breathing circle visual block */}
-                    <div className="w-36 h-36 rounded-full bg-sage/5 border-2 border-sage/10 flex items-center justify-center p-3 relative mb-6 relative">
+                    <div className="w-36 h-36 rounded-full bg-sage/5 border-2 border-sage/10 flex items-center justify-center p-3 relative mb-6">
                       
                       {/* Real time breathing animation overlay */}
                       <div className={`absolute inset-3 rounded-full bg-sage/10 border border-sage/30 transition-all duration-1000 ${
@@ -1358,14 +1358,14 @@ export default function App() {
                               : "bg-cream/50 border-sage/20 text-slate-text hover:bg-cream"
                           } ${companionActive ? "opacity-50 cursor-not-allowed" : ""}`}
                         >
-                          {mins} Mnt Focus
+                          {mins} Menit
                         </button>
                       ))}
                     </div>
 
                     {/* Coach Voice Actor selection */}
                     <div className="w-full border-t border-sage/10 pt-4 mb-4 flex items-center justify-between text-xs">
-                      <span className="text-slate-text/60">Suara Coach:</span>
+                      <span className="text-slate-text/60">Suara:</span>
                       <select
                         value={voiceVoice}
                         onChange={(e) => {
@@ -1377,7 +1377,7 @@ export default function App() {
                         <option value="Kore">Kore (Hangat)</option>
                         <option value="Zephyr">Zephyr (Lembut)</option>
                         <option value="Puck">Puck (Kasual)</option>
-                        <option value="Charon">Charon (Tegep)</option>
+                        <option value="Charon">Charon (Tegas)</option>
                       </select>
                     </div>
 
@@ -1397,7 +1397,7 @@ export default function App() {
                         }`}
                       >
                         {companionActive ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                        <span>{companionActive ? "Stop Co-Work" : "Co-Work AI"}</span>
+                        <span>{companionActive ? "Hentikan" : "Mulai Fokus"}</span>
                       </button>
 
                       {/* TTS Coach Speech Advice */}
