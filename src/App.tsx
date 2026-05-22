@@ -54,6 +54,8 @@ export default function App() {
   
   // Voice recording state
   const [isRecording, setIsRecording] = useState(false);
+  const [voiceTranscript, setVoiceTranscript] = useState("");
+  const [interimTranscript, setInterimTranscript] = useState("");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
@@ -81,6 +83,7 @@ export default function App() {
 
   // Refs
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<any>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const breathingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -248,8 +251,15 @@ export default function App() {
         mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
         playCozySynthBell(293.66, 0.5); // low end bell sound
       }
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {}
+      }
     } else {
       // START RECORDING
+      setVoiceTranscript("");
+      setInterimTranscript("");
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorderRef.current = new MediaRecorder(stream);
@@ -280,6 +290,56 @@ export default function App() {
         setIsRecording(true);
         playCozySynthBell(440, 0.2);
         playCozySynthBell(554.37, 0.2, "sine");
+
+        // Speech Recognition Setup
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (SpeechRecognition) {
+          const recognition = new SpeechRecognition();
+          recognition.lang = "id-ID";
+          recognition.continuous = true;
+          recognition.interimResults = true;
+
+          recognition.onresult = (event: any) => {
+            let interimTrans = "";
+            let finalTrans = "";
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+              const transcriptChunk = event.results[i][0].transcript;
+              if (event.results[i].isFinal) {
+                finalTrans += transcriptChunk;
+              } else {
+                interimTrans += transcriptChunk;
+              }
+            }
+            if (finalTrans) {
+              setVoiceTranscript(prev => {
+                const cleanPrev = prev.trim();
+                const cleanFinal = finalTrans.trim();
+                if (cleanPrev.endsWith(cleanFinal) || cleanPrev.includes(cleanFinal)) {
+                  return prev;
+                }
+                const result = cleanPrev ? `${cleanPrev} ${cleanFinal}` : cleanFinal;
+                setTextVent(result); // sync to textVent
+                return result;
+              });
+            }
+            if (interimTrans) {
+              setInterimTranscript(interimTrans);
+            } else {
+              setInterimTranscript("");
+            }
+          };
+
+          recognition.onerror = (event: any) => {
+            console.warn("Speech recognition error", event.error);
+          };
+
+          recognition.onend = () => {
+            console.log("Speech recognition stopped");
+          };
+
+          recognitionRef.current = recognition;
+          recognition.start();
+        }
       } catch (err) {
         console.error("Microphone denied", err);
         setErrorMessage("Gagal mengakses mikrofon. Silakan gunakan preset atau input teks venting.");
@@ -295,6 +355,7 @@ export default function App() {
       setActiveTab("text");
     } else if (preset.type === "voice") {
       setTextVent(preset.sampleText || "");
+      setVoiceTranscript(preset.sampleText || "");
       // Mock an audio note preset block
       setAudioBase64("MOCKED_AUDIO_DATA");
       setAudioUrl("#preset-audio");
@@ -328,7 +389,7 @@ export default function App() {
           mimeType: imageMime
         };
       } else if (activeTab === "voice") {
-        if (!audioBase64 && !textVent) {
+        if (!audioBase64 && !textVent && !voiceTranscript) {
           throw new Error("Lakukan rekaman suara terlebih dahulu atau gunakan preset suara.");
         }
         setLoadingStep("Menyaring emosi riuh dan memprioritaskan 3 tugas utama...");
@@ -337,7 +398,7 @@ export default function App() {
         body = {
           audioBase64: audioBase64 || "PRESET",
           mimeType: "audio/webm",
-          textFallback: textVent
+          textFallback: voiceTranscript || textVent
         };
       } else {
         if (!textVent.trim()) {
@@ -852,10 +913,55 @@ export default function App() {
                         )}
                       </div>
 
-                      {/* Display text block or venting outline info if voice is mocked */}
-                      {audioBase64 === "MOCKED_AUDIO_DATA" && (
-                        <div className="mt-4 p-3 bg-sage/5 rounded-xl text-xs border border-sage/10 font-sans italic text-slate-text/80">
-                          &ldquo;{textVent}&rdquo;
+                      {/* Real-time speech transcription & editable box */}
+                      {(isRecording || voiceTranscript || interimTranscript) && (
+                        <div className="mt-4 p-4 rounded-2xl bg-cream border border-sage/20 shadow-sm">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sage flex items-center space-x-1.5">
+                              {isRecording ? (
+                                <>
+                                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                                  <span>Merekam & Mentranskrip...</span>
+                                </>
+                              ) : (
+                                <span>Hasil Transkripsi Suara (Bisa Diedit):</span>
+                              )}
+                            </span>
+                            {!isRecording && voiceTranscript && (
+                              <button
+                                onClick={() => {
+                                  setVoiceTranscript("");
+                                  setInterimTranscript("");
+                                  setTextVent("");
+                                }}
+                                className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors"
+                              >
+                                Bersihkan
+                              </button>
+                            )}
+                          </div>
+                          
+                          <textarea
+                            value={voiceTranscript + (interimTranscript ? (voiceTranscript ? " " : "") + interimTranscript : "")}
+                            onChange={(e) => {
+                              const updatedText = e.target.value;
+                              setVoiceTranscript(updatedText);
+                              setTextVent(updatedText);
+                            }}
+                            placeholder="Mulai berbicara... Suaramu akan terkonversi otomatis menjadi teks di sini agar bisa kamu sesuaikan kembali."
+                            className="w-full h-24 bg-sage/5 text-xs rounded-xl p-3 border border-sage/15 focus:border-sage focus:outline-none resize-none leading-relaxed transition-all text-slate-text font-sans font-medium hover:border-sage/40"
+                          />
+                          
+                          {isRecording && (
+                            <p className="mt-1.5 text-[10px] text-slate-text/50 italic">
+                              *Silakan bicara dengan tenang dalam Bahasa Indonesia atau Inggris.
+                            </p>
+                          )}
+                          {!isRecording && voiceTranscript && (
+                            <p className="mt-1.5 text-[10px] text-emerald-600 font-medium">
+                              ✓ Hasil transkripsi aman. Kamu bisa mengedit teks di atas jika ejaan kurang sesuai sebelum mengklik tombol dekompresi.
+                            </p>
+                          )}
                         </div>
                       )}
                     </div>

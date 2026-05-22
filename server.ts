@@ -277,7 +277,7 @@ app.post("/api/decompress-audio", async (req, res) => {
       }
     };
     const textPart = {
-      text: "Dengarkan curhatan atau rekaman suara kegelisahan pengguna ini. Saring emosi yang meledak-ledak, temukan maksimal 3 tugas utama bernilai tinggi yang perlu diselesaikan, abaikan kebisingan pikiran lainnya, lalu buat visual task breakdown dalam schema JSON."
+      text: `Dengarkan curhatan atau rekaman suara kegelisahan pengguna ini. Saring emosi yang meledak-ledak, temukan maksimal 3 tugas utama bernilai tinggi yang perlu diselesaikan, abaikan kebisingan pikiran lainnya, lalu buat visual task breakdown dalam schema JSON. ${textFallback ? `(Catatan koreksi / transkrip bantuan dari pengguna: "${textFallback}")` : ""}`
     };
 
     const response = await aiClient.models.generateContent({
