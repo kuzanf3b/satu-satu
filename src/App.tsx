@@ -6,6 +6,8 @@ import {
   Volume2, Heart, HelpCircle, Check, Info, RefreshCw, Moon, Clock, UserCheck
 } from "lucide-react";
 import { TaskMission, MicroStep, PresetItem } from "./types";
+import presetDeskImg from "./assets/images/preset_desk_1779457590371.png";
+import presetRoomImg from "./assets/images/preset_room_1779457613968.png";
 
 // High quality native synthesizers for premium micro-interactions (e.g. relaxing bells, success chimes)
 function playCozySynthBell(freq: number, duration: number, type: OscillatorType = "sine") {
@@ -118,14 +120,14 @@ export default function App() {
       title: "Meja Kerja Kacau (Kopi & Kertas)",
       type: "visual",
       description: "Analisis cangkir kopi, kertas acak, kabel melilit, dan pulpen berantakan di meja belajarmu.",
-      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" // clean layout fallback
+      imageUrl: presetDeskImg
     },
     {
       id: "preset_room",
       title: "Lemari Pakaian yang Menggunung",
       type: "visual",
       description: "Pakaian bersih tercampur pakaian kotor di atas kasur atau tumpukan lemari.",
-      imageUrl: "https://images.unsplash.com/photo-1540553016722-983e48a2cd10?auto=format&fit=crop&w=400&q=80"
+      imageUrl: presetRoomImg
     },
     {
       id: "preset_voice_frustrated",
