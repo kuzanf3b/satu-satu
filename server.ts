@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
@@ -149,19 +150,53 @@ app.post("/api/decompress-visual", async (req, res) => {
     let format = mimeType || "image/jpeg";
     let base64Data = imageBase64;
 
-    if (imageBase64.startsWith("http://") || imageBase64.startsWith("https://")) {
+    const isLocalPath = imageBase64.startsWith("/");
+    if (imageBase64.startsWith("http://") || imageBase64.startsWith("https://") || isLocalPath) {
       try {
-        const fetchRes = await fetch(imageBase64);
-        if (!fetchRes.ok) throw new Error(`Fetch failed with status ${fetchRes.status}`);
-        const arrayBuffer = await fetchRes.arrayBuffer();
-        base64Data = Buffer.from(arrayBuffer).toString("base64");
-        const contentType = fetchRes.headers.get("content-type");
-        if (contentType) {
-          format = contentType;
+        if (isLocalPath) {
+          const possiblePaths = [
+            path.join(process.cwd(), imageBase64),
+            path.join(process.cwd(), "src", imageBase64),
+            path.join(process.cwd(), "dist", imageBase64),
+            path.join(process.cwd(), "public", imageBase64)
+          ];
+          let fileBuffer: Buffer | null = null;
+          for (const p of possiblePaths) {
+            try {
+              if (fs.existsSync(p)) {
+                fileBuffer = fs.readFileSync(p);
+                break;
+              }
+            } catch (e) {}
+          }
+          if (fileBuffer) {
+            base64Data = fileBuffer.toString("base64");
+            if (imageBase64.endsWith(".png")) format = "image/png";
+            else if (imageBase64.endsWith(".svg")) format = "image/svg+xml";
+            else format = "image/jpeg";
+          } else {
+            const fetchUrl = `http://localhost:3000${imageBase64}`;
+            const fetchRes = await fetch(fetchUrl);
+            if (!fetchRes.ok) throw new Error(`Fetch local failed with status ${fetchRes.status}`);
+            const arrayBuffer = await fetchRes.arrayBuffer();
+            base64Data = Buffer.from(arrayBuffer).toString("base64");
+            const contentType = fetchRes.headers.get("content-type");
+            if (contentType) {
+              format = contentType;
+            }
+          }
+        } else {
+          const fetchRes = await fetch(imageBase64);
+          if (!fetchRes.ok) throw new Error(`Fetch failed with status ${fetchRes.status}`);
+          const arrayBuffer = await fetchRes.arrayBuffer();
+          base64Data = Buffer.from(arrayBuffer).toString("base64");
+          const contentType = fetchRes.headers.get("content-type");
+          if (contentType) {
+            format = contentType;
+          }
         }
       } catch (err: any) {
-        console.error("Failed to fetch remote image preset, using standard fallback layout.", err);
-        // Fallback to offline dummy layout output to keep app stable
+        console.error("Failed to load preset image, using offline fallback.", err);
         return res.json({
           task_title: "Merapikan Ruang Fisik Terdekat",
           anchor_step: "Lupakan draf dan pakaian menumpuk itu sejenak. Cukup ambil cangkir atau gelas kosong paling kanan di dekatmu, dan geser tepat 5cm ke arahmu.",

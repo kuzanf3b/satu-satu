@@ -89,6 +89,7 @@ export default function App() {
   const breathingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const recordIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const playAudioRef = useRef<AudioBufferSourceNode | null>(null);
+  const speechSeqRef = useRef<number>(0);
 
   // Focus Coach Insights (From Slide Deck)
   const [currentInsightSlide, setCurrentInsightSlide] = useState(0);
@@ -460,6 +461,7 @@ export default function App() {
 
   // Programmatic global speech-cancel mechanism
   const stopAllSpeech = () => {
+    speechSeqRef.current += 1;
     setTtsPlaying(false);
     if (playAudioRef.current) {
       try {
@@ -474,6 +476,7 @@ export default function App() {
   // Speaking with Coach Speech TTS Generator
   const generateCoachSpeech = async (phraseText: string) => {
     stopAllSpeech();
+    const mySeq = speechSeqRef.current;
 
     setTtsPlaying(true);
     try {
@@ -483,13 +486,21 @@ export default function App() {
         body: JSON.stringify({ text: phraseText, voice: voiceVoice })
       });
 
+      if (mySeq !== speechSeqRef.current) {
+        return;
+      }
+
       if (!res.ok) {
         // Safe standard fallback using browser Speech Synthesis if server lacks API key
         if ('speechSynthesis' in window) {
           const utterance = new SpeechSynthesisUtterance(phraseText);
           utterance.lang = "id-ID";
           utterance.rate = 1.0;
-          utterance.onend = () => setTtsPlaying(false);
+          utterance.onend = () => {
+            if (mySeq === speechSeqRef.current) {
+              setTtsPlaying(false);
+            }
+          };
           window.speechSynthesis.speak(utterance);
         } else {
           setTtsPlaying(false);
@@ -498,6 +509,11 @@ export default function App() {
       }
 
       const outputBytes = await res.json();
+      
+      if (mySeq !== speechSeqRef.current) {
+        return;
+      }
+
       if (outputBytes.audioBase64) {
         // Decode Signed 16-bit PCM and play via Web Audio API 24000Hz (native Gemini TTS format)
         const binaryString = atob(outputBytes.audioBase64);
@@ -524,11 +540,21 @@ export default function App() {
         source.buffer = audioBuffer;
         source.connect(audioCtx.destination);
         source.onended = () => {
-          setTtsPlaying(false);
+          if (mySeq === speechSeqRef.current) {
+            setTtsPlaying(false);
+          }
           try {
             audioCtx.close();
           } catch (err) {}
         };
+
+        if (mySeq !== speechSeqRef.current) {
+          try {
+            audioCtx.close();
+          } catch (err) {}
+          return;
+        }
+
         source.start(0);
         playAudioRef.current = source;
       } else {
@@ -536,7 +562,9 @@ export default function App() {
       }
     } catch (e) {
       console.warn("TTS Player error, fallback text speech", e);
-      setTtsPlaying(false);
+      if (mySeq === speechSeqRef.current) {
+        setTtsPlaying(false);
+      }
     }
   };
 
