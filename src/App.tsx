@@ -27,6 +27,15 @@ function playCozySynthBell(freq: number, duration: number, type: OscillatorType 
     
     osc.start();
     osc.stop(audioCtx.currentTime + duration);
+
+    // Release AudioContext to prevent exhaustion of native browser resources
+    setTimeout(() => {
+      try {
+        if (audioCtx.state !== "closed") {
+          audioCtx.close();
+        }
+      } catch (err) {}
+    }, duration * 1000 + 500);
   } catch (e) {
     console.warn("Audio Context synth blocked or unsupported.", e);
   }
@@ -54,6 +63,7 @@ export default function App() {
   
   // Active Isolated Task Mission
   const [mission, setMission] = useState<TaskMission | null>(null);
+  const isAllStepsCompleted = mission ? mission.completedSteps.every(x => x === true) : false;
   const [streakCount, setStreakCount] = useState<number>(() => {
     return Number(localStorage.getItem("urai_streak") || "0");
   });
@@ -385,15 +395,22 @@ export default function App() {
     }
   };
 
+  // Programmatic global speech-cancel mechanism
+  const stopAllSpeech = () => {
+    setTtsPlaying(false);
+    if (playAudioRef.current) {
+      try {
+        playAudioRef.current.stop();
+      } catch (e) {}
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
   // Speaking with Coach Speech TTS Generator
   const generateCoachSpeech = async (phraseText: string) => {
-    if (ttsPlaying) {
-      if (playAudioRef.current) {
-        try {
-          playAudioRef.current.stop();
-        } catch(e){}
-      }
-    }
+    stopAllSpeech();
 
     setTtsPlaying(true);
     try {
@@ -443,7 +460,12 @@ export default function App() {
         const source = audioCtx.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(audioCtx.destination);
-        source.onended = () => setTtsPlaying(false);
+        source.onended = () => {
+          setTtsPlaying(false);
+          try {
+            audioCtx.close();
+          } catch (err) {}
+        };
         source.start(0);
         playAudioRef.current = source;
       } else {
@@ -996,11 +1018,8 @@ export default function App() {
                   <button
                     onClick={() => {
                       playCozySynthBell(164.81, 0.4);
+                      stopAllSpeech();
                       setCurrentScreen("hub");
-                      if (window.speechSynthesis) {
-                        window.speechSynthesis.cancel();
-                      }
-                      setTtsPlaying(false);
                     }}
                     className="mt-3 text-xs font-medium text-red-500/80 hover:text-red-600 transition-colors flex items-center space-x-1"
                   >
@@ -1035,6 +1054,7 @@ export default function App() {
                 <button
                   onClick={() => {
                     playCozySynthBell(164.81, 0.4); // E3 warm reset
+                    stopAllSpeech();
                     setCurrentScreen("hub");
                   }}
                   className="px-4 py-2 bg-sage/5 hover:bg-sage/10 text-slate-text/70 hover:text-slate-text text-xs font-medium rounded-full border border-sage/10 transition-colors flex items-center space-x-1"
@@ -1067,73 +1087,117 @@ export default function App() {
                 <div className="md:col-span-7 flex flex-col">
                   
                   {/* The Isolated Card */}
-                  <div className="bg-cream p-8 rounded-[36.5px] border-2 border-sage/20 shadow-md min-h-[340px] flex flex-col justify-between relative overflow-hidden transition-all duration-500 hover:border-sage bg-radial-gradient">
-                    {/* Absolute visual corners overlay decoration */}
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-sage/5 rounded-bl-[36.5px]"></div>
-                    
-                    {/* Stepper info banner */}
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-sage px-3 py-1 bg-sage/10 rounded-full border border-sage/10">
-                        Langkah {mission.currentStepIndex + 1} dari {mission.steps.length}
-                      </span>
+                  {isAllStepsCompleted ? (
+                    <motion.div 
+                      key="all-steps-complete-card"
+                      initial={{ scale: 0.96, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="bg-cream p-8 rounded-[36.5px] border-2 border-sage shadow-xl min-h-[340px] flex flex-col justify-between relative overflow-hidden text-center bg-radial-gradient"
+                    >
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-sage/10 rounded-bl-[100px] pointer-events-none"></div>
                       
-                      {/* Interactive Time tag */}
-                      <span className="text-xs text-slate-text/60 font-mono font-medium flex items-center space-x-1">
-                        <Clock className="w-3.5 h-3.5 text-sage" />
-                        <span>Estimasi: {mission.steps[mission.currentStepIndex].estimated_time} menit</span>
-                      </span>
-                    </div>
-
-                    {/* Highly polished isolated instructional panel using elegant Playfair Display display typography */}
-                    <div className="flex-1 my-6 flex flex-col justify-center">
-                      <h3 className="text-2xl md:text-3xl font-serif font-bold text-slate-text leading-snug tracking-normal">
-                        {mission.steps[mission.currentStepIndex].instruction}
-                      </h3>
-                    </div>
-
-                    {/* Step bottom action triggers */}
-                    <div className="mt-6 pt-6 border-t border-sage/10 flex flex-col gap-3">
-                      
-                      {/* Principal Big Finish Button */}
-                      <button
-                        onClick={() => handleMarkStepComplete(mission.currentStepIndex)}
-                        className="w-full py-4.5 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-black text-md tracking-wider transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
-                      >
-                        <Check className="w-5 h-5 stroke-[3px]" />
-                        <span>Saya Sudah Menyelesaikan Ini</span>
-                      </button>
-
-                      {/* Directional buttons */}
-                      <div className="flex items-center justify-between mt-1">
-                        <button
-                          onClick={handleStepPrevious}
-                          disabled={mission.currentStepIndex === 0}
-                          className={`text-xs font-semibold px-4 py-2 rounded-full border border-sage/10 flex items-center space-x-1.5 transition-all ${
-                            mission.currentStepIndex === 0 
-                              ? "opacity-30 cursor-not-allowed" 
-                              : "hover:bg-sage/5 text-slate-text/70"
-                          }`}
-                        >
-                          <ArrowLeft className="w-3 h-3" />
-                          <span>Langkah Sebelumnya</span>
-                        </button>
+                      <div className="flex flex-col items-center my-auto py-6">
+                        <div className="w-16 h-16 rounded-full bg-sage/10 flex items-center justify-center mb-4 relative ring-8 ring-sage/5">
+                          <Check className="w-8 h-8 text-sage stroke-[3px]" />
+                          <div className="absolute inset-0 rounded-full border border-sage/30 animate-pulse"></div>
+                        </div>
                         
-                        {mission.currentStepIndex < mission.steps.length - 1 && (
-                          <button
-                            onClick={() => {
-                              playCozySynthBell(440, 0.3);
-                              setMission({ ...mission, currentStepIndex: mission.currentStepIndex + 1 });
-                            }}
-                            className="text-xs font-semibold hover:bg-sage/5 text-slate-text/70 px-4 py-2 rounded-full border border-sage/10 flex items-center space-x-1.5 transition-all"
-                          >
-                            <span>Lewati Sementara</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </button>
-                        )}
+                        <h3 className="text-2xl md:text-3xl font-serif font-black tracking-tight text-slate-text mb-2">
+                          Misi Selesai Sepenuhnya! 🎉
+                        </h3>
+                        
+                        <p className="text-xs md:text-sm font-sans font-medium text-slate-text/75 max-w-sm leading-relaxed mb-5">
+                          Hebat sekali! Kamu berhasil mengurai dan menyelesaikan seluruh misi mikro tanpa tertunda. Jadikan ini sebagai kemenangan kognitif kecil hari ini!
+                        </p>
+
+                        <div className="inline-flex items-center space-x-2 px-4 py-2 bg-sage/15 border border-sage/35 text-slate-text text-xs rounded-full font-mono font-bold">
+                          <span>🔥 Hadiah Streak: +5 Poin (Streak Aktif: {streakCount} pts)</span>
+                        </div>
                       </div>
 
+                      <div className="mt-6 pt-6 border-t border-sage/10 w-full">
+                        <button
+                          onClick={() => {
+                            playCozySynthBell(523.25, 0.4);
+                            stopAllSpeech();
+                            setCurrentScreen("hub");
+                          }}
+                          className="w-full py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-sm tracking-widest transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
+                        >
+                          <Sparkles className="w-4 h-4" />
+                          <span>Urai Beban Pikiran Lainnya</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <div className="bg-cream p-8 rounded-[36.5px] border-2 border-sage/20 shadow-md min-h-[340px] flex flex-col justify-between relative overflow-hidden transition-all duration-500 hover:border-sage bg-radial-gradient">
+                      {/* Absolute visual corners overlay decoration */}
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-sage/5 rounded-bl-[36.5px]"></div>
+                      
+                      {/* Stepper info banner */}
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-sage px-3 py-1 bg-sage/10 rounded-full border border-sage/10">
+                          Langkah {mission.currentStepIndex + 1} dari {mission.steps.length}
+                        </span>
+                        
+                        {/* Interactive Time tag */}
+                        <span className="text-xs text-slate-text/60 font-mono font-medium flex items-center space-x-1">
+                          <Clock className="w-3.5 h-3.5 text-sage" />
+                          <span>Estimasi: {mission.steps[mission.currentStepIndex].estimated_time} menit</span>
+                        </span>
+                      </div>
+
+                      {/* Highly polished isolated instructional panel using elegant Playfair Display display typography */}
+                      <div className="flex-1 my-6 flex flex-col justify-center">
+                        <h3 className="text-2xl md:text-3xl font-serif font-bold text-slate-text leading-snug tracking-normal">
+                          {mission.steps[mission.currentStepIndex].instruction}
+                        </h3>
+                      </div>
+
+                      {/* Step bottom action triggers */}
+                      <div className="mt-6 pt-6 border-t border-sage/10 flex flex-col gap-3">
+                        
+                        {/* Principal Big Finish Button */}
+                        <button
+                          onClick={() => handleMarkStepComplete(mission.currentStepIndex)}
+                          className="w-full py-4.5 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-black text-md tracking-wider transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
+                        >
+                          <Check className="w-5 h-5 stroke-[3px]" />
+                          <span>Saya Sudah Menyelesaikan Ini</span>
+                        </button>
+
+                        {/* Directional buttons */}
+                        <div className="flex items-center justify-between mt-1">
+                          <button
+                            onClick={handleStepPrevious}
+                            disabled={mission.currentStepIndex === 0}
+                            className={`text-xs font-semibold px-4 py-2 rounded-full border border-sage/10 flex items-center space-x-1.5 transition-all ${
+                              mission.currentStepIndex === 0 
+                                ? "opacity-30 cursor-not-allowed" 
+                                : "hover:bg-sage/5 text-slate-text/70"
+                            }`}
+                          >
+                            <ArrowLeft className="w-3 h-3" />
+                            <span>Langkah Sebelumnya</span>
+                          </button>
+                          
+                          {mission.currentStepIndex < mission.steps.length - 1 && (
+                            <button
+                              onClick={() => {
+                                playCozySynthBell(440, 0.3);
+                                setMission({ ...mission, currentStepIndex: mission.currentStepIndex + 1 });
+                              }}
+                              className="text-xs font-semibold hover:bg-sage/5 text-slate-text/70 px-4 py-2 rounded-full border border-sage/10 flex items-center space-x-1.5 transition-all"
+                            >
+                              <span>Lewati Sementara</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
+
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Supportive Coach Affirmation bubble */}
                   <div className="mt-4 p-4 rounded-2xl bg-sage/5 border border-sage/10 flex items-start space-x-3 italic">
