@@ -90,6 +90,7 @@ export default function App() {
   const recordIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const playAudioRef = useRef<AudioBufferSourceNode | null>(null);
   const speechSeqRef = useRef<number>(0);
+  const decompressSeqRef = useRef<number>(0);
 
   // Focus Coach Insights (From Slide Deck)
   const [currentInsightSlide, setCurrentInsightSlide] = useState(0);
@@ -244,6 +245,7 @@ export default function App() {
 
   // Run Voice Recording Functionality
   const toggleRecording = async () => {
+    if (loading) return;
     if (isRecording) {
       // STOP RECORDING
       if (mediaRecorderRef.current) {
@@ -350,6 +352,7 @@ export default function App() {
 
   // Select Preset to auto-fill inputs
   const applyPreset = (preset: PresetItem) => {
+    if (loading) return;
     playCozySynthBell(523.25, 0.3);
     if (preset.type === "text") {
       setTextVent(preset.sampleText || "");
@@ -374,6 +377,9 @@ export default function App() {
     setLoading(true);
     setErrorMessage(null);
     playCozySynthBell(523.25, 0.4);
+
+    decompressSeqRef.current += 1;
+    const currentSeq = decompressSeqRef.current;
 
     try {
       let endpoint = "/api/decompress-text";
@@ -416,12 +422,20 @@ export default function App() {
         body: JSON.stringify(body)
       });
 
+      if (currentSeq !== decompressSeqRef.current) {
+        return;
+      }
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(errorText || "Gagal menghubungi asisten pelatih UraiLangkah.");
       }
 
       const data = await response.json();
+
+      if (currentSeq !== decompressSeqRef.current) {
+        return;
+      }
       
       // Setup the mission state securely
       const newMission: TaskMission = {
@@ -450,12 +464,16 @@ export default function App() {
       setTimeout(() => playCozySynthBell(783.99, 0.6), 300);
 
     } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err.message || "Terdapat kendala jaringan. Coba lagi.");
-      playCozySynthBell(220, 0.6, "sawtooth");
+      if (currentSeq === decompressSeqRef.current) {
+        console.error(err);
+        setErrorMessage(err.message || "Terdapat kendala jaringan. Coba lagi.");
+        playCozySynthBell(220, 0.6, "sawtooth");
+      }
     } finally {
-      setLoading(false);
-      setLoadingStep("");
+      if (currentSeq === decompressSeqRef.current) {
+        setLoading(false);
+        setLoadingStep("");
+      }
     }
   };
 
@@ -787,8 +805,11 @@ export default function App() {
                   {presets.map((preset) => (
                     <button
                       key={preset.id}
-                      onClick={() => applyPreset(preset)}
-                      className="text-left bg-cream p-3 rounded-xl border border-sage/20 hover:border-sage transition-all text-xs hover:shadow-sm flex flex-col justify-between h-24"
+                      onClick={() => !loading && applyPreset(preset)}
+                      disabled={loading}
+                      className={`text-left bg-cream p-3 rounded-xl border border-sage/20 hover:border-sage transition-all text-xs hover:shadow-sm flex flex-col justify-between h-24 ${
+                        loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                      }`}
                     >
                       <span className="font-serif font-bold text-slate-text truncate w-full">{preset.title}</span>
                       <p className="text-[10px] text-slate-text/70 line-clamp-2 mt-1 leading-normal">{preset.description}</p>
@@ -806,8 +827,11 @@ export default function App() {
               {/* Tabs */}
               <div className="flex border-b border-sage/10 mb-6 gap-2">
                 <button
-                  onClick={() => { setActiveTab("visual"); playCozySynthBell(330, 0.2); }}
+                  onClick={() => { if (loading) return; setActiveTab("visual"); playCozySynthBell(330, 0.2); }}
+                  disabled={loading}
                   className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  } ${
                     activeTab === "visual"
                       ? "border-sage text-sage"
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
@@ -818,8 +842,11 @@ export default function App() {
                 </button>
                 
                 <button
-                  onClick={() => { setActiveTab("voice"); playCozySynthBell(392, 0.2); }}
+                  onClick={() => { if (loading) return; setActiveTab("voice"); playCozySynthBell(392, 0.2); }}
+                  disabled={loading}
                   className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  } ${
                     activeTab === "voice"
                       ? "border-sage text-sage"
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
@@ -830,8 +857,11 @@ export default function App() {
                 </button>
 
                 <button
-                  onClick={() => { setActiveTab("text"); playCozySynthBell(440, 0.2); }}
+                  onClick={() => { if (loading) return; setActiveTab("text"); playCozySynthBell(440, 0.2); }}
+                  disabled={loading}
                   className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  } ${
                     activeTab === "text"
                       ? "border-sage text-sage"
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
@@ -854,20 +884,24 @@ export default function App() {
                       </p>
                       
                       <div className="flex items-center space-x-3">
-                        <label className="cursor-pointer bg-sage/15 hover:bg-sage/25 text-slate-text px-4 py-2.5 rounded-full text-xs font-semibold flex items-center space-x-2 transition-colors border border-sage/10">
+                        <label className={`bg-sage/15 hover:bg-sage/25 text-slate-text px-4 py-2.5 rounded-full text-xs font-semibold flex items-center space-x-2 transition-colors border border-sage/10 ${
+                          loading ? "opacity-55 cursor-not-allowed pointer-events-none" : "cursor-pointer"
+                        }`}>
                           <Upload className="w-3.5 h-3.5" />
                           <span>Pilih Foto</span>
                           <input 
                             type="file" 
                             accept="image/*" 
                             onChange={handleImageChange}
+                            disabled={loading}
                             className="hidden" 
                           />
                         </label>
                         {selectedImage && (
                           <button 
-                            onClick={() => { setSelectedImage(null); playCozySynthBell(220, 0.2); }}
-                            className="text-xs text-red-500 hover:underline"
+                            onClick={() => { if (loading) return; setSelectedImage(null); playCozySynthBell(220, 0.2); }}
+                            disabled={loading}
+                            className={`text-xs text-red-500 hover:underline ${loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
                           >
                             Hapus
                           </button>
@@ -923,7 +957,10 @@ export default function App() {
                       <div className="flex items-center space-x-4">
                         <button
                           onClick={toggleRecording}
+                          disabled={loading}
                           className={`px-4 py-2.5 rounded-full text-xs font-semibold transition-all flex items-center space-x-2 ${
+                            loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                          } ${
                             isRecording 
                               ? "bg-red-500 text-cream animate-pulse ring-4 ring-red-500/20"
                               : "bg-sage/15 hover:bg-sage/25 text-slate-text border border-sage/10"
@@ -958,11 +995,15 @@ export default function App() {
                             {!isRecording && voiceTranscript && (
                               <button
                                 onClick={() => {
+                                  if (loading) return;
                                   setVoiceTranscript("");
                                   setInterimTranscript("");
                                   setTextVent("");
                                 }}
-                                className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors"
+                                disabled={loading}
+                                className={`text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors ${
+                                  loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                                }`}
                               >
                                 Bersihkan
                               </button>
@@ -972,12 +1013,16 @@ export default function App() {
                           <textarea
                             value={voiceTranscript + (interimTranscript ? (voiceTranscript ? " " : "") + interimTranscript : "")}
                             onChange={(e) => {
+                              if (loading) return;
                               const updatedText = e.target.value;
                               setVoiceTranscript(updatedText);
                               setTextVent(updatedText);
                             }}
+                            disabled={loading}
                             placeholder="Mulai berbicara... Suaramu akan terkonversi otomatis menjadi teks di sini agar bisa kamu sesuaikan kembali."
-                            className="w-full h-24 bg-sage/5 text-xs rounded-xl p-3 border border-sage/15 focus:border-sage focus:outline-none resize-none leading-relaxed transition-all text-slate-text font-sans font-medium hover:border-sage/40"
+                            className={`w-full h-24 bg-sage/5 text-xs rounded-xl p-3 border border-sage/15 focus:border-sage focus:outline-none resize-none leading-relaxed transition-all text-slate-text font-sans font-medium hover:border-sage/40 ${
+                              loading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                           />
                           
                           {isRecording && (
@@ -1018,8 +1063,11 @@ export default function App() {
                     <div className="flex items-center justify-between">
                       <h3 className="font-serif font-medium text-lg">Brain Dump Venting</h3>
                       <button 
-                        onClick={() => setTextVent("")}
-                        className="text-[10px] text-slate-text/60 hover:text-slate-text"
+                        onClick={() => { if (loading) return; setTextVent(""); }}
+                        disabled={loading}
+                        className={`text-[10px] text-slate-text/60 hover:text-slate-text ${
+                          loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                        }`}
                       >
                         Reset Teks
                       </button>
@@ -1027,8 +1075,11 @@ export default function App() {
                     <textarea
                       placeholder="Ketik apa saja yang membebani pikiranmu... Contoh: harus cuci pakaian tapi skripsi telat dan kamar mandi sangat berantakan"
                       value={textVent}
-                      onChange={(e) => setTextVent(e.target.value)}
-                      className="w-full h-32 bg-cream text-sm rounded-2xl p-4 border border-sage/20 focus:border-sage focus:outline-none resize-none leading-relaxed transition-all"
+                      onChange={(e) => { if (loading) return; setTextVent(e.target.value); }}
+                      disabled={loading}
+                      className={`w-full h-32 bg-cream text-sm rounded-2xl p-4 border border-sage/20 focus:border-sage focus:outline-none resize-none leading-relaxed transition-all ${
+                        loading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     />
                   </div>
                 )}
@@ -1051,6 +1102,7 @@ export default function App() {
                     <button
                       onClick={() => {
                         playCozySynthBell(164.81, 0.4);
+                        decompressSeqRef.current += 1;
                         setLoading(false);
                       }}
                       className="mt-3 text-[10px] font-mono font-bold text-red-500/80 hover:text-red-600 uppercase tracking-wider transition-colors cursor-pointer"
