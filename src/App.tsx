@@ -671,31 +671,31 @@ export default function App() {
 
       {/* Main Bar */}
       {currentScreen !== "anchor" && currentScreen !== "isolation" && (
-        <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-40">
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentScreen("welcome")}>
-            <div className="w-10 h-10 rounded-full bg-sage flex items-center justify-center text-cream shadow-sm hover:rotate-12 transition-transform duration-300">
-              <Sparkles className="w-5 h-5" />
+        <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-4 md:px-6 py-3 md:py-4 flex items-center justify-between sticky top-0 z-40">
+          <div className="flex items-center space-x-2 md:space-x-3 cursor-pointer" onClick={() => setCurrentScreen("welcome")}>
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-sage flex items-center justify-center text-cream shadow-sm hover:rotate-12 transition-transform duration-300">
+              <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-serif font-bold tracking-tight text-slate-text">UraiLangkah</h1>
-              <p className="text-[10px] uppercase tracking-widest text-slate-text/60">ADHD Cognitive Armor</p>
+              <h1 className="text-lg md:text-xl font-serif font-bold tracking-tight text-slate-text leading-none md:leading-normal">UraiLangkah</h1>
+              <p className="text-[9px] md:text-[10px] uppercase tracking-widest text-slate-text/60 scale-90 origin-left md:scale-100">ADHD Cognitive Armor</p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4">
             {/* Daily Streak Indicator */}
-            <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-sage/10 text-slate-text border border-sage/20 text-xs font-mono font-medium" title="Kemenangan Mikro Hari Ini">
-              <Heart className="w-3.5 h-3.5 text-sage fill-sage animate-pulse" />
-              <span>Streak:</span>
+            <div className="flex items-center space-x-1 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-sage/10 text-slate-text border border-sage/20 text-[10px] md:text-xs font-mono font-medium" title="Kemenangan Mikro Hari Ini">
+              <Heart className="w-3 h-3 md:w-3.5 md:h-3.5 text-sage fill-sage animate-pulse flex-shrink-0" />
+              <span className="hidden sm:inline">Streak:</span>
               <span className="text-slate-text font-bold">{streakCount} pts</span>
             </div>
 
             <button 
               onClick={() => setCurrentScreen("insights")}
-              className="p-1.5 rounded-full hover:bg-sage/10 text-slate-text/70 hover:text-slate-text transition-colors"
+              className="p-1 px-1.5 rounded-full hover:bg-sage/10 text-slate-text/70 hover:text-slate-text transition-colors flex items-center"
               title="Wawasan Regulasi Emosi"
             >
-              <Compass className="w-5 h-5" />
+              <Compass className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </header>
@@ -713,27 +713,27 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.5 }}
-              className="text-center max-w-xl mx-auto py-12 flex flex-col items-center"
+              className="text-center max-w-xl mx-auto py-6 md:py-12 flex flex-col items-center"
             >
-              <div className="w-40 h-40 rounded-full bg-sage/5 flex items-center justify-center p-3 mb-8 ring-8 ring-sage/10 relative">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-sage/5 flex items-center justify-center p-2.5 md:p-3 mb-6 md:mb-8 ring-6 md:ring-8 ring-sage/10 relative">
                 {/* Floating soft shapes */}
                 <div className="absolute inset-0 rounded-full border border-sage/20 animate-spin" style={{ animationDuration: "12s" }}></div>
-                <div className="w-32 h-32 rounded-full bg-[#fcf9f6] flex items-center justify-center">
-                  <div className="w-24 h-24 rounded-full bg-sage/10 flex items-center justify-center">
-                    <Sparkles className="w-10 h-10 text-sage" />
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#fcf9f6] flex items-center justify-center">
+                  <div className="w-18 h-18 md:w-24 md:h-24 rounded-full bg-sage/10 flex items-center justify-center">
+                    <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-sage" />
                   </div>
                 </div>
               </div>
 
-              <h2 className="text-4xl md:text-5xl font-serif font-black tracking-tight mb-4 text-slate-text leading-tight">
+              <h2 className="text-3xl md:text-5xl font-serif font-black tracking-tight mb-4 text-slate-text leading-tight px-2">
                 Mari Kita Urai Bersama.
               </h2>
               
-              <p className="text-sm md:text-md text-slate-text/80 mb-8 max-w-sm leading-relaxed font-sans font-light">
+              <p className="text-xs md:text-md text-slate-text/80 mb-8 max-w-sm leading-relaxed font-sans font-light px-4">
                 Ubah kekacauan pikiran atau tumpukan area yang berantakan menjadi tugas mikro instan tanpa rasa cemas.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full justify-center px-4">
                 <button
                   onClick={() => {
                     setCurrentScreen("hub");
@@ -796,12 +796,12 @@ export default function App() {
               </div>
 
               {/* Preset Selector Rail */}
-              <div className="mb-6 p-4 bg-sage/5 rounded-2xl border border-sage/10">
-                <span className="text-xs uppercase tracking-wider text-sage/80 font-bold block mb-3 flex items-center justify-between">
+              <div className="mb-6 p-3 md:p-4 bg-sage/5 rounded-2xl border border-sage/10">
+                <span className="text-xs uppercase tracking-wider text-sage/80 font-bold block mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span>✨ Sandbox Contoh Uji Multi-Modal</span>
-                  <span className="text-[10px] text-slate-text/50 font-normal font-sans">Klik acak untuk langsung memuat contoh input</span>
+                  <span className="text-[9px] md:text-[10px] text-slate-text/50 font-normal font-sans normal-case">Klik acak untuk langsung memuat contoh input</span>
                 </span>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3">
                   {presets.map((preset) => (
                     <button
                       key={preset.id}
@@ -825,11 +825,11 @@ export default function App() {
               </div>
 
               {/* Tabs */}
-              <div className="flex border-b border-sage/10 mb-6 gap-2">
+              <div className="flex border-b border-sage/10 mb-6 gap-1 md:gap-2 overflow-x-auto scrollbar-none snap-x whitespace-nowrap">
                 <button
                   onClick={() => { if (loading) return; setActiveTab("visual"); playCozySynthBell(330, 0.2); }}
                   disabled={loading}
-                  className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                  className={`pb-2.5 md:pb-3 px-2 md:px-3 font-serif font-bold text-xs md:text-sm tracking-wide transition-all border-b-2 flex items-center space-x-1.5 md:space-x-2 flex-shrink-0 snap-start ${
                     loading ? "opacity-50 cursor-not-allowed" : ""
                   } ${
                     activeTab === "visual"
@@ -837,14 +837,14 @@ export default function App() {
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
                   }`}
                 >
-                  <Camera className="w-4 h-4" />
+                  <Camera className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   <span>Gunakan Foto (Visual)</span>
                 </button>
                 
                 <button
                   onClick={() => { if (loading) return; setActiveTab("voice"); playCozySynthBell(392, 0.2); }}
                   disabled={loading}
-                  className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                  className={`pb-2.5 md:pb-3 px-2 md:px-3 font-serif font-bold text-xs md:text-sm tracking-wide transition-all border-b-2 flex items-center space-x-1.5 md:space-x-2 flex-shrink-0 snap-start ${
                     loading ? "opacity-50 cursor-not-allowed" : ""
                   } ${
                     activeTab === "voice"
@@ -852,14 +852,14 @@ export default function App() {
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
                   }`}
                 >
-                  <Mic className="w-4 h-4" />
+                  <Mic className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   <span>Curah Suara (Audio)</span>
                 </button>
 
                 <button
                   onClick={() => { if (loading) return; setActiveTab("text"); playCozySynthBell(440, 0.2); }}
                   disabled={loading}
-                  className={`pb-3 px-3 font-serif font-bold text-sm tracking-wide transition-all border-b-2 flex items-center space-x-2 ${
+                  className={`pb-2.5 md:pb-3 px-2 md:px-3 font-serif font-bold text-xs md:text-sm tracking-wide transition-all border-b-2 flex items-center space-x-1.5 md:space-x-2 flex-shrink-0 snap-start ${
                     loading ? "opacity-50 cursor-not-allowed" : ""
                   } ${
                     activeTab === "text"
@@ -867,13 +867,13 @@ export default function App() {
                       : "border-transparent text-slate-text/50 hover:text-slate-text"
                   }`}
                 >
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   <span>Ketik Teks (Brain Dump)</span>
                 </button>
               </div>
 
               {/* Tab Contents Frame */}
-              <div className="bg-cream p-6 rounded-3xl border border-sage/15 shadow-sm min-h-[200px] flex flex-col justify-between">
+              <div className="bg-cream p-4 md:p-6 rounded-2xl md:rounded-3xl border border-sage/15 shadow-sm min-h-[200px] flex flex-col justify-between">
                 
                 {activeTab === "visual" && (
                   <div className="flex flex-col md:flex-row gap-6">
@@ -1131,7 +1131,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0a0f0d]/95 backdrop-blur-md"
+              className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-4 bg-[#0a0f0d]/95 backdrop-blur-md overflow-y-auto"
             >
               <div className="absolute inset-0 bg-radial-gradient opacity-20 pointer-events-none"></div>
               
@@ -1139,31 +1139,31 @@ export default function App() {
                 initial={{ scale: 0.9, y: 30 }}
                 animate={{ scale: 1, y: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 180 }}
-                className="bg-cream p-8 md:p-12 rounded-[40px] border border-sage/30 max-w-lg w-full shadow-2xl text-center relative overflow-hidden"
+                className="bg-cream p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-sage/30 max-w-lg w-full max-h-[92vh] overflow-y-auto scrollbar-none shadow-2xl text-center relative flex flex-col justify-between"
               >
                 <div className="absolute -top-12 -left-12 w-32 h-32 bg-sage/10 rounded-full filter blur-xl"></div>
                 <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-sage/10 rounded-full filter blur-xl"></div>
 
                 <div className="flex flex-col items-center">
-                  <span className="px-3 py-1 bg-sage/10 text-sage hover:bg-sage/15 transition-colors text-[10px] uppercase font-mono font-black tracking-widest border border-sage/15 rounded-full mb-6">
+                  <span className="px-3 py-1 bg-sage/10 text-sage hover:bg-sage/15 transition-colors text-[10px] uppercase font-mono font-black tracking-widest border border-sage/15 rounded-full mb-4 md:mb-6">
                     ⚡ Langkah Pertama
                   </span>
 
-                  <div className="w-16 h-16 rounded-full bg-sage/5 flex items-center justify-center mb-6 ring-4 ring-sage/10 relative">
-                    <div className="absolute inset-2 rounded-full bg-sage/10 animate-ping opacity-60"></div>
-                    <Sparkles className="w-6 h-6 text-sage relative z-10" />
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-sage/5 flex items-center justify-center mb-4 md:mb-6 ring-4 ring-sage/10 relative">
+                    <div className="absolute inset-1.5 rounded-full bg-sage/10 animate-ping opacity-60"></div>
+                    <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-sage relative z-10" />
                   </div>
 
-                  <h3 className="text-xl font-serif font-black tracking-tight text-slate-text mb-3">
+                  <h3 className="text-lg md:text-xl font-serif font-black tracking-tight text-slate-text mb-2 md:mb-3">
                     Langkah Jangkar (10 Detik)
                   </h3>
 
-                  <p className="text-xs font-sans font-medium text-slate-text/70 mb-6 max-w-sm leading-relaxed">
+                  <p className="text-[11px] md:text-xs font-sans font-medium text-slate-text/70 mb-4 md:mb-6 max-w-sm leading-relaxed px-2">
                     Jangan pikirkan hasil akhir. Cukup menangkan momentum pertamamu dengan aksi super ringan di bawah ini:
                   </p>
 
-                  <div className="bg-sage/5 border border-sage/15 p-6 rounded-3xl mb-8 w-full shadow-inner">
-                    <h4 className="text-lg md:text-xl font-serif font-bold text-slate-text leading-relaxed">
+                  <div className="bg-sage/5 border border-sage/15 p-4 md:p-6 rounded-2xl md:rounded-3xl mb-6 md:mb-8 w-full shadow-inner">
+                    <h4 className="text-md md:text-xl font-serif font-bold text-slate-text leading-relaxed">
                       &ldquo;{mission.anchor_step}&rdquo;
                     </h4>
                   </div>
@@ -1186,7 +1186,7 @@ export default function App() {
                       
                       setCurrentScreen("isolation");
                     }}
-                    className="w-full py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-xs tracking-wider transition-all shadow-lg shadow-sage/25 flex items-center justify-center space-x-3 cursor-pointer"
+                    className="w-full py-3.5 md:py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-xs tracking-wider transition-all shadow-lg shadow-sage/25 flex items-center justify-center space-x-3 cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                     <span>Selesai! Beri Saya Dopamin ⚡</span>
@@ -1198,7 +1198,7 @@ export default function App() {
                       setCurrentScreen("isolation");
                       generateCoachSpeech(`Mari masuk ke langkah mikro pertama.`);
                     }}
-                    className="mt-4 text-xs font-semibold text-slate-text/60 hover:text-slate-text transition-colors"
+                    className="mt-3 md:mt-4 text-[11px] md:text-xs font-semibold text-slate-text/60 hover:text-slate-text transition-colors"
                   >
                     Lewati jangkar & langsung ke Misi Mikro
                   </button>
@@ -1209,7 +1209,7 @@ export default function App() {
                       stopAllSpeech();
                       setCurrentScreen("hub");
                     }}
-                    className="mt-3 text-xs font-medium text-red-500/80 hover:text-red-600 transition-colors flex items-center space-x-1"
+                    className="mt-2.5 md:mt-3 text-[11px] md:text-xs font-medium text-red-500/80 hover:text-red-600 transition-colors flex items-center space-x-1"
                   >
                     <span>&larr; Batalkan</span>
                   </button>
@@ -1280,37 +1280,37 @@ export default function App() {
                       key="all-steps-complete-card"
                       initial={{ scale: 0.96, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="bg-cream p-8 rounded-[36.5px] border-2 border-sage shadow-xl min-h-[340px] flex flex-col justify-between relative overflow-hidden text-center bg-radial-gradient"
+                      className="bg-cream p-5 md:p-8 rounded-[28px] md:rounded-[36.5px] border-2 border-sage shadow-xl min-h-[320px] md:min-h-[340px] flex flex-col justify-between relative overflow-hidden text-center bg-radial-gradient"
                     >
                       <div className="absolute top-0 right-0 w-24 h-24 bg-sage/10 rounded-bl-[100px] pointer-events-none"></div>
                       
-                      <div className="flex flex-col items-center my-auto py-6">
-                        <div className="w-16 h-16 rounded-full bg-sage/10 flex items-center justify-center mb-4 relative ring-8 ring-sage/5">
-                          <Check className="w-8 h-8 text-sage stroke-[3px]" />
+                      <div className="flex flex-col items-center my-auto py-4 md:py-6">
+                        <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-sage/10 flex items-center justify-center mb-3 md:mb-4 relative ring-6 md:ring-8 ring-sage/5">
+                          <Check className="w-6 h-6 md:w-8 md:h-8 text-sage stroke-[3px]" />
                           <div className="absolute inset-0 rounded-full border border-sage/30 animate-pulse"></div>
                         </div>
                         
-                        <h3 className="text-2xl md:text-3xl font-serif font-black tracking-tight text-slate-text mb-2">
+                        <h3 className="text-xl md:text-3xl font-serif font-black tracking-tight text-slate-text mb-2">
                           Misi Selesai Sepenuhnya! 🎉
                         </h3>
                         
-                        <p className="text-xs md:text-sm font-sans font-medium text-slate-text/75 max-w-sm leading-relaxed mb-5">
+                        <p className="text-xs md:text-sm font-sans font-medium text-slate-text/75 max-w-sm leading-relaxed mb-4 md:mb-5 px-1 md:px-2">
                           Hebat sekali! Kamu berhasil mengurai dan menyelesaikan seluruh misi mikro tanpa tertunda. Jadikan ini sebagai kemenangan kognitif kecil hari ini!
                         </p>
 
-                        <div className="inline-flex items-center space-x-2 px-4 py-2 bg-sage/15 border border-sage/35 text-slate-text text-xs rounded-full font-mono font-bold">
+                        <div className="inline-flex items-center space-x-2 px-3 md:px-4 py-1.5 md:py-2 bg-sage/15 border border-sage/35 text-slate-text text-[10px] md:text-xs rounded-full font-mono font-bold">
                           <span>🔥 Hadiah Streak: +5 Poin (Streak Aktif: {streakCount} pts)</span>
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-6 border-t border-sage/10 w-full">
+                      <div className="mt-4 md:mt-6 pt-4 md:p-6 border-t border-sage/10 w-full">
                         <button
                           onClick={() => {
                             playCozySynthBell(523.25, 0.4);
                             stopAllSpeech();
                             setCurrentScreen("hub");
                           }}
-                          className="w-full py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-sm tracking-widest transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
+                          className="w-full py-3.5 md:py-4 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-bold text-xs md:text-sm tracking-widest transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
                         >
                           <Sparkles className="w-4 h-4" />
                           <span>Urai Beban Pikiran Lainnya</span>
@@ -1318,13 +1318,13 @@ export default function App() {
                       </div>
                     </motion.div>
                   ) : (
-                    <div className="bg-cream p-8 rounded-[36.5px] border-2 border-sage/20 shadow-md min-h-[340px] flex flex-col justify-between relative overflow-hidden transition-all duration-500 hover:border-sage bg-radial-gradient">
+                    <div className="bg-cream p-5 md:p-8 rounded-[28px] md:rounded-[36.5px] border-2 border-sage/20 shadow-md min-h-[320px] md:min-h-[340px] flex flex-col justify-between relative overflow-hidden transition-all duration-500 hover:border-sage bg-radial-gradient">
                       {/* Absolute visual corners overlay decoration */}
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-sage/5 rounded-bl-[36.5px]"></div>
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-sage/5 rounded-bl-[28px] md:rounded-bl-[36.5px]"></div>
                       
                       {/* Stepper info banner */}
-                      <div className="flex items-center justify-between mb-6">
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-sage px-3 py-1 bg-sage/10 rounded-full border border-sage/10">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-3 mb-4 md:mb-6">
+                        <span className="text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-widest text-sage px-3 py-1 bg-sage/10 rounded-full border border-sage/10 self-start">
                           Langkah {mission.currentStepIndex + 1} dari {mission.steps.length}
                         </span>
                         
@@ -1336,36 +1336,36 @@ export default function App() {
                       </div>
 
                       {/* Highly polished isolated instructional panel using elegant Playfair Display display typography */}
-                      <div className="flex-1 my-6 flex flex-col justify-center">
-                        <h3 className="text-2xl md:text-3xl font-serif font-bold text-slate-text leading-snug tracking-normal">
+                      <div className="flex-1 my-4 md:my-6 flex flex-col justify-center">
+                        <h3 className="text-xl md:text-3xl font-serif font-bold text-slate-text leading-snug tracking-normal px-1">
                           {mission.steps[mission.currentStepIndex].instruction}
                         </h3>
                       </div>
 
                       {/* Step bottom action triggers */}
-                      <div className="mt-6 pt-6 border-t border-sage/10 flex flex-col gap-3">
+                      <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-sage/10 flex flex-col gap-2.5 md:gap-3">
                         
                         {/* Principal Big Finish Button */}
                         <button
                           onClick={() => handleMarkStepComplete(mission.currentStepIndex)}
-                          className="w-full py-4.5 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-black text-md tracking-wider transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
+                          className="w-full py-3.5 md:py-4.5 bg-sage hover:bg-[#6e8c5f] text-cream rounded-2xl font-serif font-black text-xs md:text-md tracking-wider transition-all shadow-md flex items-center justify-center space-x-2 cursor-pointer"
                         >
-                          <Check className="w-5 h-5 stroke-[3px]" />
+                          <Check className="w-4 h-4 md:w-5 md:h-5 stroke-[3px]" />
                           <span>Saya Sudah Menyelesaikan Ini</span>
                         </button>
 
                         {/* Directional buttons */}
-                        <div className="flex items-center justify-between mt-1">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 md:gap-3 mt-1">
                           <button
                             onClick={handleStepPrevious}
                             disabled={mission.currentStepIndex === 0}
-                            className={`text-xs font-semibold px-4 py-2 rounded-full border border-sage/10 flex items-center space-x-1.5 transition-all ${
+                            className={`w-full sm:w-auto text-xs font-semibold px-4 py-2 rounded-full border border-sage/10 flex items-center justify-center space-x-1.5 transition-all ${
                               mission.currentStepIndex === 0 
                                 ? "opacity-30 cursor-not-allowed" 
                                 : "hover:bg-sage/5 text-slate-text/70"
                             }`}
                           >
-                            <ArrowLeft className="w-3 h-3" />
+                            <ArrowLeft className="w-3 h-3 flex-shrink-0" />
                             <span>Langkah Sebelumnya</span>
                           </button>
                           
@@ -1375,10 +1375,10 @@ export default function App() {
                                 playCozySynthBell(440, 0.3);
                                 setMission({ ...mission, currentStepIndex: mission.currentStepIndex + 1 });
                               }}
-                              className="text-xs font-semibold hover:bg-sage/5 text-slate-text/70 px-4 py-2 rounded-full border border-sage/10 flex items-center space-x-1.5 transition-all"
+                              className="w-full sm:w-auto text-xs font-semibold hover:bg-sage/5 text-slate-text/70 px-4 py-2 rounded-full border border-sage/10 flex items-center justify-center space-x-1.5 transition-all"
                             >
                               <span>Lewati Sementara</span>
-                              <ArrowRight className="w-3 h-3" />
+                              <ArrowRight className="w-3 h-3 flex-shrink-0" />
                             </button>
                           )}
                         </div>
@@ -1538,7 +1538,7 @@ export default function App() {
               </div>
 
               {/* Slider Deck */}
-              <div className="bg-cream p-8 rounded-3xl border border-sage/20 shadow-sm relative overflow-hidden min-h-[300px] flex flex-col justify-between">
+              <div className="bg-cream p-5 md:p-8 rounded-2xl md:rounded-3xl border border-sage/20 shadow-sm relative overflow-hidden min-h-[280px] md:min-h-[300px] flex flex-col justify-between">
                 
                 <div className="absolute top-0 right-0 w-24 h-24 bg-sage/5 rounded-bl-[100px]"></div>
 
@@ -1552,16 +1552,16 @@ export default function App() {
                     transition={{ duration: 0.3 }}
                     className="flex-1 flex flex-col justify-center"
                   >
-                    <span className="text-[10px] uppercase font-mono font-bold tracking-widest text-sage bg-sage/10 px-2.5 py-1 rounded-full border border-sage/10 self-start mb-4">
+                    <span className="text-[10px] uppercase font-mono font-bold tracking-widest text-sage bg-sage/10 px-2.5 py-1 rounded-full border border-sage/10 self-start mb-3 md:mb-4">
                       {insights[currentInsightSlide].concept}
                     </span>
-                    <h3 className="text-2xl font-serif font-black text-slate-text mb-2">
+                    <h3 className="text-xl md:text-2xl font-serif font-black text-slate-text mb-1 md:mb-2 leading-tight">
                       {insights[currentInsightSlide].title}
                     </h3>
-                    <p className="text-xs text-slate-text/60 italic font-mono mb-4">
+                    <p className="text-[11px] md:text-xs text-slate-text/60 italic font-mono mb-3 md:mb-4">
                       {insights[currentInsightSlide].subtitle}
                     </p>
-                    <p className="text-xs text-slate-text/80 leading-relaxed mb-6 font-sans">
+                    <p className="text-xs text-slate-text/80 leading-relaxed mb-4 md:mb-6 font-sans">
                       {insights[currentInsightSlide].desc}
                     </p>
                     <div className="p-3 bg-sage/5 rounded-xl border border-sage/10 text-xs text-slate-text text-medium font-sans flex items-center space-x-2">
@@ -1572,7 +1572,7 @@ export default function App() {
                 </AnimatePresence>
 
                 {/* Slider paginated controls */}
-                <div className="flex items-center justify-between border-t border-sage/10 mt-6 pt-4">
+                <div className="flex items-center justify-between border-t border-sage/10 mt-5 md:mt-6 pt-4">
                   <div className="flex space-x-1.5">
                     {insights.map((_, i) => (
                       <div 
@@ -1609,8 +1609,8 @@ export default function App() {
               </div>
 
               {/* Extra Zen Action Card button */}
-              <div className="mt-6 p-4 rounded-3xl bg-sage/10 border border-sage/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-center sm:text-left">
+              <div className="mt-6 p-4 rounded-2xl md:rounded-3xl bg-sage/10 border border-sage/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div>
                   <span className="font-serif font-black text-sm block">Siap Melawan Paralisis Sekarang?</span>
                   <p className="text-[10px] text-slate-text/70 mt-0.5">Letakkan kecemasanmu kepada dekompresor UraiLangkah.</p>
                 </div>
@@ -1619,7 +1619,7 @@ export default function App() {
                     playCozySynthBell(440, 0.4);
                     setCurrentScreen("hub");
                   }}
-                  className="px-6 py-2.5 bg-sage text-cream rounded-full text-xs font-bold transition-all shadow-sm shadow-sage/15 flex items-center space-x-1 cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-sage text-cream rounded-full text-xs font-bold transition-all shadow-sm shadow-sage/15 flex items-center justify-center space-x-1 cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Dekompresi Sekarang</span>
