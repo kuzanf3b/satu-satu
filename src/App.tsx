@@ -5,6 +5,7 @@ import {
   RotateCcw, Compass, ArrowLeft, ArrowRight, Upload, AlertCircle, 
   Volume2, Heart, HelpCircle, Check, Info, RefreshCw, Moon, Clock, UserCheck
 } from "lucide-react";
+import confetti from "canvas-confetti";
 import { TaskMission, MicroStep, PresetItem } from "./types";
 import presetDeskImg from "./assets/images/preset_desk_1779457590371.png";
 import presetRoomImg from "./assets/images/preset_room_1779457613968.png";
@@ -41,6 +42,59 @@ function playCozySynthBell(freq: number, duration: number, type: OscillatorType 
   } catch (e) {
     console.warn("Audio Context synth blocked or unsupported.", e);
   }
+}
+
+// Play premium cascading Dopamine Chimes (Fairy arpeggio design)
+function playDopamineChime() {
+  const notes = [523.25, 659.25, 783.99, 987.77, 1174.66]; // C5, E5, G5, B5, D6 (Sweet pentatonic major-9th chord roll)
+  notes.forEach((freq, idx) => {
+    setTimeout(() => {
+      playCozySynthBell(freq, 0.45, "sine");
+    }, idx * 75);
+  });
+}
+
+// Spark subtle, elegant pastel flower petals & zen confetti celebration
+function triggerZenCelebration() {
+  const colors = ["#b2c7a5", "#dfebdb", "#fcf9f6", "#e4ccb9", "#f1e5d7", "#dca7a1"];
+  
+  // Left corner petal spray
+  confetti({
+    particleCount: 45,
+    angle: 60,
+    spread: 55,
+    origin: { x: 0, y: 0.85 },
+    colors: colors,
+    ticks: 180,
+    gravity: 0.8,
+    scalar: 1.15
+  });
+  
+  // Right corner petal spray
+  confetti({
+    particleCount: 45,
+    angle: 120,
+    spread: 55,
+    origin: { x: 1, y: 0.85 },
+    colors: colors,
+    ticks: 180,
+    gravity: 0.8,
+    scalar: 1.15
+  });
+
+  // Soft slow-falling center drizzle (petal-like circles)
+  setTimeout(() => {
+    confetti({
+      particleCount: 30,
+      angle: 90,
+      spread: 75,
+      origin: { x: 0.5, y: 0.35 },
+      colors: colors,
+      ticks: 140,
+      gravity: 0.65,
+      scalar: 1.25
+    });
+  }, 350);
 }
 
 export default function App() {
@@ -589,10 +643,6 @@ export default function App() {
   // Complete Active Step mechanism
   const handleMarkStepComplete = (index: number) => {
     if (!mission) return;
-    
-    // Play celebratory bell chime
-    playCozySynthBell(587.33, 0.3); // D5
-    setTimeout(() => playCozySynthBell(880, 0.4), 100); // A5
 
     const updatedCompleted = [...mission.completedSteps];
     updatedCompleted[index] = true;
@@ -613,22 +663,29 @@ export default function App() {
     setMission(updatedMission);
 
     if (isAllDone) {
+      // Trigger interactive pastel petal confetti celebration!
+      triggerZenCelebration();
+
       // Update streak
       const nextStreak = streakCount + 5;
       setStreakCount(nextStreak);
       localStorage.setItem("urai_streak", String(nextStreak));
 
-      // Play final heavy grand celebratory chord
+      // Play major chords & cascading chime
+      playCozySynthBell(523.25, 0.8, "sine"); // C
+      playCozySynthBell(659.25, 0.8, "sine"); // E
+      playCozySynthBell(783.99, 0.8, "sine"); // G
+      playCozySynthBell(1046.50, 1.2, "sine"); // High C
       setTimeout(() => {
-        playCozySynthBell(523.25, 0.8, "sine"); // C
-        playCozySynthBell(659.25, 0.8, "sine"); // E
-        playCozySynthBell(783.99, 0.8, "sine"); // G
-        playCozySynthBell(1046.50, 1.2, "sine"); // High C
-      }, 300);
+        playDopamineChime();
+      }, 250);
 
       const phrase = `Luar biasa! Kamar atau tugasmu selesai sepenuhnya. Kemenangan luar biasa untuk hari ini! Streak poin kamu sekarang bertambah ${nextStreak}`;
       generateCoachSpeech(phrase);
     } else {
+      // Play a beautiful calming dopamine step chime
+      playDopamineChime();
+
       // Say supportive voice for next step
       const phrase = `Langkah bagus! Mari berlanjut ke langkah baru: ${updatedMission.steps[nextIndex].instruction}`;
       generateCoachSpeech(phrase);
@@ -1271,8 +1328,8 @@ export default function App() {
               {/* TWO COLUMN GRID: Left: Isolated Card, Right: Body Doubling Companion widget */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
                 
-                {/* COLUMN A: Card Isolation block (Span 7) */}
-                <div className="md:col-span-7 flex flex-col">
+                {/* COLUMN A: Card Isolation block */}
+                <div className={`${isAllStepsCompleted ? "md:col-span-12 max-w-2xl mx-auto w-full" : "md:col-span-7"} flex flex-col`}>
                   
                   {/* The Isolated Card */}
                   {isAllStepsCompleted ? (
@@ -1398,9 +1455,10 @@ export default function App() {
                 </div>
 
                 {/* COLUMN B: Body Doubling Companion (Span 5) */}
-                <div className="md:col-span-5 flex flex-col space-y-6">
-                  
-                  {/* The Companion Circle Container */}
+                {!isAllStepsCompleted && (
+                  <div className="md:col-span-5 flex flex-col space-y-6">
+                    
+                    {/* The Companion Circle Container */}
                   <div className="bg-cream/40 p-6 rounded-3xl border border-sage/10 flex flex-col items-center">
                     <span className="text-[10px] uppercase tracking-widest text-[#81A172] font-mono font-bold mb-4">Teman Fokus (AI Companion)</span>
                     
@@ -1502,6 +1560,7 @@ export default function App() {
                   </div>
 
                 </div>
+              )}
 
               </div>
 
