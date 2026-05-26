@@ -1457,7 +1457,7 @@ export default function App() {
                 {/* COLUMN B: Body Doubling Companion (Span 5) */}
                 {!isAllStepsCompleted && (
                   <div className="md:col-span-5 flex flex-col space-y-6">
-                    
+                     
                     {/* The Companion Circle Container */}
                   <div className="bg-cream/40 p-6 rounded-3xl border border-sage/10 flex flex-col items-center">
                     <span className="text-[10px] uppercase tracking-widest text-[#81A172] font-mono font-bold mb-4">Teman Fokus (AI Companion)</span>
