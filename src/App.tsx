@@ -630,12 +630,37 @@ export default function App() {
         source.start(0);
         playAudioRef.current = source;
       } else {
-        setTtsPlaying(false);
+        // Fallback to browser SpeechSynthesis so the audio is still read out loud seamlessly!
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(phraseText);
+          utterance.lang = "id-ID";
+          utterance.rate = 1.0;
+          utterance.onend = () => {
+            if (mySeq === speechSeqRef.current) {
+              setTtsPlaying(false);
+            }
+          };
+          window.speechSynthesis.speak(utterance);
+        } else {
+          setTtsPlaying(false);
+        }
       }
     } catch (e) {
       console.warn("TTS Player error, fallback text speech", e);
       if (mySeq === speechSeqRef.current) {
-        setTtsPlaying(false);
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(phraseText);
+          utterance.lang = "id-ID";
+          utterance.rate = 1.0;
+          utterance.onend = () => {
+            if (mySeq === speechSeqRef.current) {
+              setTtsPlaying(false);
+            }
+          };
+          window.speechSynthesis.speak(utterance);
+        } else {
+          setTtsPlaying(false);
+        }
       }
     }
   };
@@ -730,12 +755,13 @@ export default function App() {
       {currentScreen !== "anchor" && currentScreen !== "isolation" && (
         <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-4 md:px-6 py-3 md:py-4 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center space-x-2.5 md:space-x-3 cursor-pointer group" onClick={() => setCurrentScreen("welcome")}>
-            <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-sage/10 border border-sage/25 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-sm">
+            <div className="h-9 w-9 md:h-11 md:w-11 rounded-xl bg-sage/10 border border-sage/25 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-sm">
               <div className="absolute inset-0 bg-gradient-to-tr from-sage/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              {/* Overlapping double number one representing SatuSatu step-by-step progress */}
-              <div className="flex items-end justify-center space-x-[2px] h-6 md:h-7 mt-0.5 select-none">
-                <span className="font-serif font-black text-lg md:text-xl text-sage leading-none transform translate-y-[1px]">1</span>
-                <span className="font-serif font-black text-lg md:text-xl text-sage/40 leading-none transform -translate-y-[2px]">1</span>
+              {/* Concentric Step Arch with a beautifully styled large text "1" */}
+              <div className="flex items-center justify-center relative select-none w-full h-full">
+                <div className="absolute w-6.5 h-6.5 rounded-full border border-sage/25 animate-pulse"></div>
+                <div className="absolute w-4.5 h-4.5 rounded-full border border-sage/15 border-dashed animate-spin" style={{ animationDuration: "20s" }}></div>
+                <span className="font-serif font-black text-base md:text-lg text-sage leading-none z-10 relative">1</span>
               </div>
             </div>
             <div>
@@ -780,15 +806,24 @@ export default function App() {
               transition={{ duration: 0.5 }}
               className="text-center max-w-xl mx-auto py-6 md:py-12 flex flex-col items-center"
             >
-              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-sage/5 flex items-center justify-center p-2.5 md:p-3 mb-6 md:mb-8 ring-6 md:ring-8 ring-sage/10 relative group">
-                {/* Floating soft shapes */}
-                <div className="absolute inset-0 rounded-full border border-sage/20 animate-spin" style={{ animationDuration: "12s" }}></div>
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#fcf9f6] shadow-sm flex items-center justify-center">
-                  <div className="w-18 h-18 md:w-24 md:h-24 rounded-full bg-sage/15 flex items-center justify-center relative overflow-hidden">
-                    <div className="flex items-end justify-center space-x-1.5 md:space-x-2 select-none">
-                      <span className="font-serif font-black text-5xl md:text-6xl text-sage transform translate-y-[3px]">1</span>
-                      <span className="font-serif font-black text-5xl md:text-6xl text-sage/30 transform -translate-y-[5px]">1</span>
-                    </div>
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-sage/5 flex items-center justify-center p-3 mb-6 md:mb-8 ring-8 ring-sage/10 relative group">
+                {/* Floating breathing soft shapes representing cognitive calm */}
+                <div className="absolute inset-0 rounded-full border border-sage/20 animate-pulse"></div>
+                {/* Concentric Zen ripples */}
+                <div className="absolute inset-3 rounded-full border border-sage/15 border-dashed animate-spin" style={{ animationDuration: "50s" }}></div>
+                <div className="absolute inset-6 rounded-full border border-sage/10"></div>
+                
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#fcf9f6] shadow-sm flex items-center justify-center relative overflow-hidden">
+                  {/* Modern Progressive Steps behind the number 1 */}
+                  <div className="absolute bottom-4 flex items-end justify-center space-x-1 sm:space-x-1.5 opacity-25">
+                    <div className="w-4 h-1.5 bg-sage/35 rounded-t"></div>
+                    <div className="w-4 h-4 bg-sage/50 rounded-t"></div>
+                    <div className="w-4 h-7 bg-sage/75 rounded-t"></div>
+                  </div>
+                  
+                  {/* The beautifully bold large centered "1" */}
+                  <div className="relative select-none z-10">
+                    <span className="font-serif font-black text-6xl md:text-7xl text-sage drop-shadow-[0_2px_4px_rgba(111,139,99,0.15)] block transform translate-y-[-2px]">1</span>
                   </div>
                 </div>
               </div>

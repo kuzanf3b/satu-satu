@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Modality } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -350,31 +350,91 @@ app.post("/api/generate-speech", async (req, res) => {
     }
 
     const aiClient = getGenAI();
-    // TTS the prompt using prebuilt voice
     const coachPrompt = `Katakan dengan nada hangat, ramah, penuh kepedulian seperti pelatih ADHD produktivitas: "${text}"`;
 
-    const response = await aiClient.models.generateContent({
-      model: "gemini-3.1-flash-tts-preview",
-      contents: [{ parts: [{ text: coachPrompt }] }],
-      config: {
-        responseModalities: ["AUDIO"],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: selectedVoice },
+    let response;
+    let errMessage = "";
+
+    // 1st Attempt: Preferred gemini-3.1-flash-tts-preview model with full standard voice config
+    try {
+      response = await aiClient.models.generateContent({
+        model: "gemini-3.1-flash-tts-preview",
+        contents: coachPrompt,
+        config: {
+          responseModalities: [Modality.AUDIO],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: selectedVoice },
+            },
           },
         },
-      },
-    });
+      });
+    } catch (e: any) {
+      console.warn("TTS main model attempt failed, trying fallback...", e.message || e);
+      errMessage = e.message || String(e);
+    }
 
-    const audioBase64 = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+    // 2nd Attempt: If first failed, try same model with simpler contents / plain text input
+    if (!response) {
+      try {
+        response = await aiClient.models.generateContent({
+          model: "gemini-3.1-flash-tts-preview",
+          contents: text,
+          config: {
+            responseModalities: [Modality.AUDIO],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: selectedVoice },
+              },
+            },
+          },
+        });
+      } catch (e: any) {
+        console.warn("TTS simplified text attempt failed...", e.message || e);
+        errMessage = e.message || String(e);
+      }
+    }
+
+    // 3rd Attempt: Fallback to gemini-3.5-flash as the highly powered multimodal model
+    if (!response) {
+      try {
+        response = await aiClient.models.generateContent({
+          model: "gemini-3.5-flash",
+          contents: coachPrompt,
+          config: {
+            responseModalities: [Modality.AUDIO],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: selectedVoice },
+              },
+            },
+          },
+        });
+      } catch (e: any) {
+        console.warn("TTS gemini-3.5-flash fallback attempt failed...", e.message || e);
+        errMessage = e.message || String(e);
+      }
+    }
+
+    const audioBase64 = response?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
     if (audioBase64) {
       res.json({ audioBase64, format: "pcm", sampleRate: 24000 });
     } else {
-      res.status(500).json({ error: "Gagal memproduksi audio ucapan dari model" });
+      console.error("TTS generation fully failed. Falling back gracefully. Error details:", errMessage);
+      // Return 200 with fallback details so the frontend handles it cleanly and smoothly
+      res.json({ 
+        audioBase64: null, 
+        warning: "TTS model is currently busy. Falling back to local synthesizer.", 
+        errorDetails: errMessage 
+      });
     }
   } catch (err: any) {
-    console.error("Error in generate-speech API:", err);
-    res.status(500).json({ error: "Gagal memproses teks menjadi ucapan: " + err.message });
+    console.error("Error in generate-speech API handler:", err);
+    res.json({ 
+      audioBase64: null, 
+      warning: "Gagal memproses ucapan. Menggunakan pembaca suara lokal.",
+      errorDetails: err.message 
+    });
   }
 });
 
