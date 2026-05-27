@@ -161,7 +161,7 @@ export default function App() {
       subtitle: "Daftar tugas panjang membuat kita membeku.",
       concept: "Kecemasan Tugas",
       desc: "Sasaran abstrak memicu rasa takut gagal. Menunda tugas menjadi tameng perlindungan emosi sementara.",
-      bullet: "UraiLangkah menyaring kebisingan pikiran agar menjadi tugas nyata."
+      bullet: "SatuSatu menyaring kebisingan pikiran agar menjadi tugas nyata."
     },
     {
       title: "Aesthetic Philosophy: The Zen Shield",
@@ -482,7 +482,7 @@ export default function App() {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || "Gagal menghubungi asisten pelatih UraiLangkah.");
+        throw new Error(errorText || "Gagal menghubungi asisten pelatih SatuSatu.");
       }
 
       const data = await response.json();
@@ -494,7 +494,7 @@ export default function App() {
       // Setup the mission state securely
       const newMission: TaskMission = {
         id: "mission_" + Date.now(),
-        task_title: data.task_title || "Misi Mikro UraiLangkah",
+        task_title: data.task_title || "Misi Mikro SatuSatu",
         steps: data.steps && data.steps.length > 0 ? data.steps : [
           { instruction: "Tarik napas dalam-dalam selama 5 hitungan.", estimated_time: "1" },
           { instruction: "Tata 1 barang terdekat ke tempatnya.", estimated_time: "3" }
@@ -729,12 +729,20 @@ export default function App() {
       {/* Main Bar */}
       {currentScreen !== "anchor" && currentScreen !== "isolation" && (
         <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-4 md:px-6 py-3 md:py-4 flex items-center justify-between sticky top-0 z-40">
-          <div className="flex items-center space-x-2 md:space-x-3 cursor-pointer" onClick={() => setCurrentScreen("welcome")}>
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-sage flex items-center justify-center text-cream shadow-sm hover:rotate-12 transition-transform duration-300">
-              <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
+          <div className="flex items-center space-x-2.5 md:space-x-3 cursor-pointer group" onClick={() => setCurrentScreen("welcome")}>
+            <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-sage/10 border border-sage/25 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-sm">
+              <div className="absolute inset-0 bg-gradient-to-tr from-sage/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              {/* Overlapping double number one representing SatuSatu step-by-step progress */}
+              <div className="flex items-end justify-center space-x-[2px] h-6 md:h-7 mt-0.5 select-none">
+                <span className="font-serif font-black text-lg md:text-xl text-sage leading-none transform translate-y-[1px]">1</span>
+                <span className="font-serif font-black text-lg md:text-xl text-sage/40 leading-none transform -translate-y-[2px]">1</span>
+              </div>
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-serif font-bold tracking-tight text-slate-text leading-none md:leading-normal">UraiLangkah</h1>
+              <h1 className="text-lg md:text-xl font-serif font-bold tracking-tight text-slate-text leading-none md:leading-normal flex items-center gap-1.5">
+                SatuSatu
+                <span className="w-1.5 h-1.5 rounded-full bg-sage inline-block animate-pulse"></span>
+              </h1>
               <p className="text-[9px] md:text-[10px] uppercase tracking-widest text-slate-text/60 scale-90 origin-left md:scale-100">ADHD Cognitive Armor</p>
             </div>
           </div>
@@ -772,12 +780,15 @@ export default function App() {
               transition={{ duration: 0.5 }}
               className="text-center max-w-xl mx-auto py-6 md:py-12 flex flex-col items-center"
             >
-              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-sage/5 flex items-center justify-center p-2.5 md:p-3 mb-6 md:mb-8 ring-6 md:ring-8 ring-sage/10 relative">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-sage/5 flex items-center justify-center p-2.5 md:p-3 mb-6 md:mb-8 ring-6 md:ring-8 ring-sage/10 relative group">
                 {/* Floating soft shapes */}
                 <div className="absolute inset-0 rounded-full border border-sage/20 animate-spin" style={{ animationDuration: "12s" }}></div>
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#fcf9f6] flex items-center justify-center">
-                  <div className="w-18 h-18 md:w-24 md:h-24 rounded-full bg-sage/10 flex items-center justify-center">
-                    <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-sage" />
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#fcf9f6] shadow-sm flex items-center justify-center">
+                  <div className="w-18 h-18 md:w-24 md:h-24 rounded-full bg-sage/15 flex items-center justify-center relative overflow-hidden">
+                    <div className="flex items-end justify-center space-x-1.5 md:space-x-2 select-none">
+                      <span className="font-serif font-black text-5xl md:text-6xl text-sage transform translate-y-[3px]">1</span>
+                      <span className="font-serif font-black text-5xl md:text-6xl text-sage/30 transform -translate-y-[5px]">1</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -787,7 +798,7 @@ export default function App() {
               </h2>
               
               <p className="text-xs md:text-md text-slate-text/80 mb-8 max-w-sm leading-relaxed font-sans font-light px-4">
-                Ubah kekacauan pikiran atau tumpukan area yang berantakan menjadi tugas mikro instan tanpa rasa cemas.
+                Ubah kekacauan pikiran atau tumpukan area yang berantakan menjadi tugas mikro secara satu per satu tanpa rasa cemas.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full justify-center px-4">
@@ -843,7 +854,7 @@ export default function App() {
               </button>
 
               <div className="mb-6">
-                <span className="text-xs uppercase tracking-widest text-[#81A172] font-semibold">UraiLangkah Engine</span>
+                <span className="text-xs uppercase tracking-widest text-[#81A172] font-semibold">SatuSatu Engine</span>
                 <h2 className="text-2xl md:text-3xl font-serif font-black tracking-tight mt-1 text-slate-text">
                   Ada Apa Hari Ini?
                 </h2>
@@ -1589,10 +1600,10 @@ export default function App() {
               <div className="mb-6">
                 <span className="text-xs uppercase tracking-widest text-sage font-bold font-mono">Taman Wawasan Medik</span>
                 <h2 className="text-3xl font-serif font-black tracking-tight text-slate-text mt-1">
-                  UraiLangkah Zen Psychoeducation
+                  SatuSatu Zen Psychoeducation
                 </h2>
                 <p className="text-xs text-slate-text/70 mt-1 leading-relaxed">
-                  Kenali mengapa kepalamu kadang buntu, dan bagaimana antarmuka UraiLangkah didesain secara klinis untuk melindungimu.
+                  Kenali mengapa kepalamu kadang buntu, dan bagaimana antarmuka SatuSatu didesain secara klinis untuk melindungimu.
                 </p>
               </div>
 
@@ -1671,7 +1682,7 @@ export default function App() {
               <div className="mt-6 p-4 rounded-2xl md:rounded-3xl bg-sage/10 border border-sage/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
                 <div>
                   <span className="font-serif font-black text-sm block">Siap Melawan Paralisis Sekarang?</span>
-                  <p className="text-[10px] text-slate-text/70 mt-0.5">Letakkan kecemasanmu kepada dekompresor UraiLangkah.</p>
+                  <p className="text-[10px] text-slate-text/70 mt-0.5">Letakkan kecemasanmu kepada dekompresor SatuSatu.</p>
                 </div>
                 <button
                   onClick={() => {
@@ -1694,7 +1705,7 @@ export default function App() {
       {/* Footer Branding Area */}
       {currentScreen !== "anchor" && currentScreen !== "isolation" && (
         <footer className="border-t border-sage/15 py-8 px-6 text-center text-[10px] uppercase tracking-wider text-slate-text/50 font-mono mt-auto relative z-10 bg-cream/70 backdrop-blur-md">
-          <p>&copy; {new Date().getFullYear()} UraiLangkah - Finding Clarity in Chaos via Multimodal AI</p>
+          <p>&copy; {new Date().getFullYear()} SatuSatu - Finding Clarity in Chaos via Multimodal AI</p>
           <p className="mt-1 font-sans font-light normal-case text-slate-text/40">Didesain khusus untuk penderita ADHD, Autisme, Prokrastinasi Kronis, dan gangguan fungsi eksekutif.</p>
         </footer>
       )}

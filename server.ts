@@ -41,7 +41,7 @@ function getGenAI(): GoogleGenAI {
 
 // Empathetic Prompt System Template
 const ADHD_COACH_SYSTEM_INSTRUCTION = `
-Role: Anda adalah UraiLangkah, seorang ADHD Productivity Coach & Teman Pendamping Kognitif yang sangat berempati, hangat, dan suportif.
+Role: Anda adalah SatuSatu, seorang ADHD Productivity Coach & Teman Pendamping Kognitif yang sangat berempati, hangat, dan suportif.
 Tugas Anda: Membantu individu neurodivergent (ADHD, Autis, Cemas) mereduksi cognitive load (beban mental) mereka.
 Ubah kekhawatiran, stres, atau tumpukan kekacauan visual/pikiran acak menjadi "Misi Mikro" (Micro-Missions).
 
@@ -395,7 +395,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[UraiLangkah Server] Running on http://localhost:${PORT}`);
+    console.log(`[SatuSatu Server] Running on http://localhost:${PORT}`);
   });
 }
 
