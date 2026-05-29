@@ -751,17 +751,17 @@ export default function App() {
       <div className="absolute top-0 right-0 w-80 h-80 bg-sage/5 rounded-full filter blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-20 left-0 w-96 h-96 bg-sage/5 rounded-full filter blur-3xl pointer-events-none"></div>
 
-      {/* Main Bar */}
+       {/* Main Bar */}
       {currentScreen !== "anchor" && currentScreen !== "isolation" && (
         <header className="border-b border-sage/10 bg-cream/70 backdrop-blur-md px-4 md:px-6 py-3 md:py-4 flex items-center justify-between sticky top-0 z-40">
           <div className="flex items-center space-x-2.5 md:space-x-3 cursor-pointer group" onClick={() => setCurrentScreen("welcome")}>
-            <div className="h-9 w-9 md:h-11 md:w-11 rounded-xl bg-sage/10 border border-sage/25 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-sm">
+            <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-sage/10 border border-sage/25 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-sm">
               <div className="absolute inset-0 bg-gradient-to-tr from-sage/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               {/* Concentric Step Arch with a beautifully styled large text "1" */}
               <div className="flex items-center justify-center relative select-none w-full h-full">
-                <div className="absolute w-6.5 h-6.5 rounded-full border border-sage/25 animate-pulse"></div>
-                <div className="absolute w-4.5 h-4.5 rounded-full border border-sage/15 border-dashed animate-spin" style={{ animationDuration: "20s" }}></div>
-                <span className="font-serif font-black text-base md:text-lg text-sage leading-none z-10 relative">1</span>
+                <div className="absolute w-7 h-7 md:w-8 md:h-8 rounded-full border border-sage/25 animate-pulse"></div>
+                <div className="absolute w-5 h-5 md:w-6 md:h-6 rounded-full border border-sage/15 border-dashed animate-spin" style={{ animationDuration: "20s" }}></div>
+                <span className="font-serif font-black text-xl md:text-2xl text-sage leading-none z-10 relative">1</span>
               </div>
             </div>
             <div>
@@ -806,24 +806,24 @@ export default function App() {
               transition={{ duration: 0.5 }}
               className="text-center max-w-xl mx-auto py-6 md:py-12 flex flex-col items-center"
             >
-              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-sage/5 flex items-center justify-center p-3 mb-6 md:mb-8 ring-8 ring-sage/10 relative group">
+              <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-sage/5 flex items-center justify-center p-3 mb-6 md:mb-8 ring-8 ring-sage/10 relative group">
                 {/* Floating breathing soft shapes representing cognitive calm */}
                 <div className="absolute inset-0 rounded-full border border-sage/20 animate-pulse"></div>
                 {/* Concentric Zen ripples */}
                 <div className="absolute inset-3 rounded-full border border-sage/15 border-dashed animate-spin" style={{ animationDuration: "50s" }}></div>
                 <div className="absolute inset-6 rounded-full border border-sage/10"></div>
                 
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#fcf9f6] shadow-sm flex items-center justify-center relative overflow-hidden">
+                <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-[#fcf9f6] shadow-sm flex items-center justify-center relative overflow-hidden">
                   {/* Modern Progressive Steps behind the number 1 */}
                   <div className="absolute bottom-4 flex items-end justify-center space-x-1 sm:space-x-1.5 opacity-25">
-                    <div className="w-4 h-1.5 bg-sage/35 rounded-t"></div>
-                    <div className="w-4 h-4 bg-sage/50 rounded-t"></div>
-                    <div className="w-4 h-7 bg-sage/75 rounded-t"></div>
+                    <div className="w-4.5 h-2 bg-sage/35 rounded-t"></div>
+                    <div className="w-4.5 h-5 bg-sage/50 rounded-t"></div>
+                    <div className="w-4.5 h-9 bg-sage/75 rounded-t"></div>
                   </div>
                   
                   {/* The beautifully bold large centered "1" */}
                   <div className="relative select-none z-10">
-                    <span className="font-serif font-black text-6xl md:text-7xl text-sage drop-shadow-[0_2px_4px_rgba(111,139,99,0.15)] block transform translate-y-[-2px]">1</span>
+                    <span className="font-serif font-black text-7xl md:text-8xl text-sage drop-shadow-[0_2px_4px_rgba(111,139,99,0.15)] block transform translate-y-[-2px]">1</span>
                   </div>
                 </div>
               </div>

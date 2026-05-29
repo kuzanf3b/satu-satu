@@ -416,6 +416,27 @@ app.post("/api/generate-speech", async (req, res) => {
       }
     }
 
+    // 4th Attempt: Fallback to gemini-2.5-flash for maximum reliability
+    if (!response) {
+      try {
+        response = await aiClient.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: coachPrompt,
+          config: {
+            responseModalities: [Modality.AUDIO],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: selectedVoice },
+              },
+            },
+          },
+        });
+      } catch (e: any) {
+        console.warn("TTS gemini-2.5-flash fallback attempt failed...", e.message || e);
+        errMessage = e.message || String(e);
+      }
+    }
+
     const audioBase64 = response?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
     if (audioBase64) {
       res.json({ audioBase64, format: "pcm", sampleRate: 24000 });
