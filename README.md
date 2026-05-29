@@ -69,6 +69,3 @@ See `.env.example` for required keys:
 ## Contributing
 
 Contributions and accessibility/UX improvements are always welcome. Please open an issue or PR.
-
-**License:** MIT  
-**Author:** [kuzanf3b](https://github.com/kuzanf3b)
