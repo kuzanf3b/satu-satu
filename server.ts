@@ -8,8 +8,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = typeof import.meta !== "undefined" && import.meta.url ? fileURLToPath(import.meta.url) : "";
+const __dirname = __filename ? path.dirname(__filename) : process.cwd();
 
 const app = express();
 const PORT = 3000;
